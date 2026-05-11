@@ -16,6 +16,10 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
   const isOutOfStock = product.stock_status === 'outofstock';
   const isWishlisted = wishlistIds.includes(product.id);
 
+  // Logic: Only show rating if there is at least one review
+  const hasRating = product.rating_count > 0;
+  const displayRating = hasRating ? Number(product.average_rating).toFixed(1) : null;
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -25,7 +29,6 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
       className="group flex flex-col bg-white rounded-[12px] p-2.5 sm:p-4 shadow-sm hover:shadow-md transition-all h-full relative border border-black/[0.02]"
     >
       <div className="relative aspect-[4/5] rounded-[10px] overflow-hidden mb-3 sm:mb-4 bg-[#F9F9F9]">
-        {/* SHIMMER PLACEHOLDER */}
         {!imageLoaded && (
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent animate-[shimmer_1.5s_infinite] -translate-x-full" 
                style={{ backgroundSize: '200% 100%' }} />
@@ -68,18 +71,24 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
         </span>
         
         <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-1 w-full">
-          <Link href={`/product/${product.id}`} className="truncate max-w-[65%]">
+          <Link href={`/product/${product.id}`} className="truncate max-w-[75%]">
             <h3 className="text-[13px] sm:text-[15px] font-outfit font-medium text-[#3D1218] hover:opacity-70 transition-opacity truncate">
               {product.name}
             </h3>
           </Link>
-          <span className="text-[#3D1218]/10 text-[14px]">|</span>
-          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-            <Star size={10} className="fill-[#D2A546] text-[#D2A546] sm:w-[12px] sm:h-[12px]" />
-            <span className="text-[11px] sm:text-[13px] font-montserrat font-medium text-[#3D1218]/40">
-              {product.average_rating || '4.5'}
-            </span>
-          </div>
+          
+          {/* DYNAMIC RATING ENGINE */}
+          {hasRating && (
+            <>
+              <span className="text-[#3D1218]/10 text-[14px]">|</span>
+              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
+                <Star size={10} className="fill-[#D2A546] text-[#D2A546] sm:w-[12px] sm:h-[12px]" />
+                <span className="text-[11px] sm:text-[13px] font-montserrat font-medium text-[#3D1218]/40">
+                  {displayRating}
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="text-[16px] sm:text-[18px] font-montserrat font-bold text-[#3D1218] mb-4 sm:mb-5">
@@ -88,12 +97,12 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
 
         <div className="flex justify-center items-center gap-1.5 sm:gap-2 w-full mt-auto pb-0.5">
           <div className="flex-[0.42] sm:flex-none sm:w-[92px] flex items-center justify-between bg-[#F5E6E8] px-1.5 sm:px-3 h-[30px] rounded-full min-w-0">
-            <button onClick={() => setQuantity(quantity + 1)} className="text-[#3D1218] hover:opacity-50 transition-opacity shrink-0">
-              <Plus size={10} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
-            </button>
-            <span className="font-outfit font-bold text-[10px] sm:text-[12px] text-[#3D1218] truncate px-1">{quantity}</span>
             <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-[#3D1218] hover:opacity-50 transition-opacity shrink-0">
               <Minus size={10} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
+            </button>
+            <span className="font-outfit font-bold text-[10px] sm:text-[12px] text-[#3D1218] truncate px-1">{quantity}</span>
+            <button onClick={() => setQuantity(quantity + 1)} className="text-[#3D1218] hover:opacity-50 transition-opacity shrink-0">
+              <Plus size={10} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
             </button>
           </div>
           <button
