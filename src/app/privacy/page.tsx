@@ -1,0 +1,151 @@
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+/* ─── SHARED COMPONENTS ─────────────────────────────────────────────────── */
+
+function LuxuryListBlock({ items }: { items: { label?: string; text: string }[] }) {
+  return (
+    <div className="bg-[#F9F9F9] rounded-[24px] px-5 py-6 md:p-8 space-y-5 border border-black/[0.01] mt-4">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-start gap-3 md:gap-4 min-w-0">
+          {/* Bullet: Strict Burgundy Dot */}
+          <div className="w-2 h-2 rounded-full bg-[#3D1218] mt-2 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="font-montserrat text-sm md:text-[15px] leading-relaxed text-[#0C0608]/80 break-words">
+              {item.label && (
+                <span className="font-bold text-[#3D1218] mr-1">{item.label}:</span>
+              )}
+              {item.text}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── PAGE ──────────────────────────────────────────────────────────────── */
+
+export default function PrivacyPolicy() {
+  return (
+    <main className="bg-[#FDF8F0] min-h-screen">
+      <Navbar variant="solid" />
+      
+      {/* 1. EDITORIAL HERO */}
+      <section className="relative h-[280px] md:h-[350px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 z-10" />
+        <img 
+          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776160062/blog_assets/vkp8knugjh0e4rmjl385.png" 
+          className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
+          alt="Privacy Hero"
+        />
+        <h1 className="relative z-20 font-outfit text-4xl md:text-6xl font-bold text-white tracking-tighter uppercase text-center">
+          Privacy Policy
+        </h1>
+      </section>
+
+      {/* 2. CONTENT CARD: Calibrated Mobile Padding */}
+      <section className="max-w-5xl mx-auto px-4 md:px-6 -mt-12 md:-mt-16 relative z-30 pb-24">
+        <div className="bg-white rounded-[32px] md:rounded-[40px] px-5 py-10 md:p-16 lg:p-20 shadow-[0_20px_80px_rgba(0,0,0,0.04)] border border-black/[0.02]">
+          
+          <div className="space-y-12 md:space-y-14">
+            
+            {/* SECTION: PRIVACY & DATA PROTECTION */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight leading-tight">
+                  Privacy & Data Protection
+                </h2>
+                <p className="font-montserrat text-[11px] font-medium text-[#3D1218]/50 uppercase tracking-widest">
+                  Last Updated: May 2026
+                </p>
+              </div>
+              <div className="space-y-4 pt-2">
+                <h3 className="font-outfit text-lg font-bold text-[#3D1218]">Our Commitment to Your Privacy</h3>
+                <p className="font-montserrat text-sm md:text-base text-[#0C0608]/70 leading-relaxed">
+                  At Sleigh Strand, your trust is our most valued asset. We are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data to provide a seamless and secure shopping experience.
+                </p>
+              </div>
+            </div>
+
+            {/* SECTION: INFORMATION WE COLLECT */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight">
+                  Information We Collect
+                </h2>
+                <p className="font-montserrat text-sm text-[#0C0608]/60 leading-relaxed">
+                  To ensure every order meets our quality and styling standards, please note the following:
+                </p>
+              </div>
+              <LuxuryListBlock items={[
+                { label: "Identity Data", text: "Name, email address, and phone number for order updates." },
+                { label: "Logistics Data", text: "Shipping and billing addresses to ensure accurate delivery." },
+                { label: "Transaction Data", text: "Details about payments and products purchased (Note: We do not store full credit card details; all payments are processed via secure, encrypted gateways)." },
+                { label: "Technical Data", text: "IP address and cookies to improve your browsing experience and remember your \"Dream Hair\" wishlist." }
+              ]} />
+            </div>
+
+            {/* SECTION: HOW WE USE YOUR DATA */}
+            <div className="space-y-6">
+              <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight">
+                How We Use Your Data
+              </h2>
+              <p className="font-montserrat text-sm text-[#0C0608]/60 leading-relaxed">
+                We use your information solely to:
+              </p>
+              <LuxuryListBlock items={[
+                { text: "Process and fulfill your orders with precision." },
+                { text: "Provide personalized \"Expert Styling Guides\" when requested." },
+                { text: "Send \"Inner Circle\" updates and exclusive drops (only if you’ve opted in)." },
+                { text: "Prevent fraudulent transactions and ensure account security." }
+              ]} />
+            </div>
+
+            {/* SECTION: DATA SHARING */}
+            <div className="space-y-6">
+              <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight">
+                Data Sharing & Security
+              </h2>
+              <p className="font-montserrat text-sm text-[#0C0608]/60 leading-relaxed">
+                Sleigh Strand does not, and will never, sell your personal data to third parties. We only share information with trusted partners essential to our operations, such as:
+              </p>
+              <LuxuryListBlock items={[
+                { label: "Logistics Partners", text: "To deliver your luxury bundles to your doorstep." },
+                { label: "Payment Processors", text: "To ensure 100% secure, encrypted transactions." },
+                { label: "Analytics Providers", text: "To help us understand how to improve our UI and service." }
+              ]} />
+            </div>
+
+            {/* SECTION: YOUR RIGHTS */}
+            <div className="space-y-4">
+              <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight">
+                Your Rights
+              </h2>
+              <p className="font-montserrat text-sm md:text-base text-[#0C0608]/70 leading-relaxed">
+                You have the right to access, correct, or request the deletion of your personal data at any time. You may also opt-out of marketing communications by clicking the "Unsubscribe" link in our newsletter or contacting our concierge team.
+              </p>
+            </div>
+
+            {/* SECTION: CONTACT US */}
+            <div className="space-y-6">
+              <h2 className="font-outfit text-2xl md:text-[36px] font-bold text-[#3D1218] tracking-tight">
+                Contact Us
+              </h2>
+              <p className="font-montserrat text-sm text-[#0C0608]/60 leading-relaxed">
+                For questions regarding our privacy practices or to exercise your data rights, please reach out to our privacy team:
+              </p>
+              <LuxuryListBlock items={[
+                { label: "Email", text: "privacy@sleighstrand.com" },
+                { label: "WhatsApp", text: "09056113019" }
+              ]} />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

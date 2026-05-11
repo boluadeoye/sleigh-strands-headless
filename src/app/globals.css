@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-burgundy: #8B2632;
+  --color-gold: #D2A546;
+  --color-blush: #F5E6E8;
+  --color-cream: #FDF8F0;
+  --color-ink: #0C0608;
+
+  /* Hard-coded Font Mapping: Bypasses variable resolution issues */
+  --font-sans: "Montserrat", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html, body {
+    overflow-x: clip;
+  }
+
+  /* UNIVERSAL FONT LOCK: Forces Montserrat on EVERYTHING by default */
+  *, ::before, ::after {
+    font-family: "Montserrat", sans-serif !important;
+  }
+
+  body {
+    @apply bg-cream text-ink antialiased;
+  }
+
+  /* Explicitly kill browser-default Serif on headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", sans-serif !important;
+    @apply font-bold;
+  }
+
+  [data-nextjs-scroll-focus-boundary] {
+    display: contents;
+  }
+}
+
+/* PROTECTED CLASS: The only way to use the Serif font (Hero/Editorial) */
+.font-serif-italic {
+  font-family: "Cormorant Garamond", serif !important;
+  font-style: italic !important;
+}
+
+.desktop-only { display: none !important; }
+.mobile-only { display: block !important; }
+.desktop-flex { display: none !important; }
+
+@media (min-width: 768px) {
+  .desktop-only { display: block !important; }
+  .mobile-only { display: none !important; }
+  .desktop-flex { display: flex !important; }
+}
+
+.site-wrapper {
+  overflow-x: clip;
+  width: 100%;
+  position: relative;
+}
