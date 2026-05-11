@@ -5,35 +5,50 @@ import { Heart, Star, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-export default function ProductCard({ product }: { product: any }) {
+export default function ProductCard({ product, index = 0 }: { product: any, index?: number }) {
   const { addToCart } = useCart();
   const { wishlistIds, toggleWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   const isOutOfStock = product.stock_status === 'outofstock';
   const isWishlisted = wishlistIds.includes(product.id);
 
   return (
-    <div className="group flex flex-col bg-white rounded-[12px] p-2.5 sm:p-4 shadow-sm hover:shadow-md transition-all h-full relative border border-black/[0.02]">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: (index % 4) * 0.1, ease: "easeOut" }}
+      className="group flex flex-col bg-white rounded-[12px] p-2.5 sm:p-4 shadow-sm hover:shadow-md transition-all h-full relative border border-black/[0.02]"
+    >
       <div className="relative aspect-[4/5] rounded-[10px] overflow-hidden mb-3 sm:mb-4 bg-[#F9F9F9]">
+        {/* SHIMMER PLACEHOLDER */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent animate-[shimmer_1.5s_infinite] -translate-x-full" 
+               style={{ backgroundSize: '200% 100%' }} />
+        )}
+
         <Link href={`/product/${product.id}`}>
           <Image
             src={product.images?.[0]?.src || "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png"}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className={`object-cover group-hover:scale-105 transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setImageLoaded(true)}
+            sizes="(max-width: 768px) 50vw, 33vw"
           />
         </Link>
 
         <button 
           onClick={(e) => {
             e.preventDefault();
-            e.stopPropagation(); // FIX: Stops the redirect to details page
+            e.stopPropagation();
             toggleWishlist(product.id);
           }}
-          className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] hover:scale-110 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
+          className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] hover:scale-110 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
         >
           <Heart className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} fill={isWishlisted ? "currentColor" : "none"} />
         </button>
@@ -94,6 +109,6 @@ export default function ProductCard({ product }: { product: any }) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
