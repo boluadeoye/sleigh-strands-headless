@@ -40,7 +40,6 @@ export async function getSingleProduct(id: string) {
     if (!res.ok) return null;
     const product = await res.json();
 
-    // DEEP FETCH: If product is variable, fetch all variations
     if (product.type === 'variable' && product.variations?.length > 0) {
       const varRes = await fetch(`${baseUrl}/wp-json/wc/v3/products/${id}/variations?${auth}&per_page=100`, {
         next: { revalidate: 60 }
@@ -54,5 +53,22 @@ export async function getSingleProduct(id: string) {
   } catch (e) {
     console.error("Single Product Fetch Error:", e);
     return null;
+  }
+}
+
+export async function getProductReviews(productId: string) {
+  const ck = process.env.WC_CONSUMER_KEY;
+  const cs = process.env.WC_CONSUMER_SECRET;
+  const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+  
+  try {
+    // STRICT FILTER: status=approved ensures unapproved reviews stay hidden
+    const res = await fetch(`${baseUrl}/wp-json/wc/v3/products/reviews?product=${productId}&status=approved&consumer_key=${ck}&consumer_secret=${cs}`, {
+      next: { revalidate: 30 }
+    });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (e) {
+    return [];
   }
 }

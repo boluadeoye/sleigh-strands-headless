@@ -1,16 +1,21 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductGrid from '@/components/ProductGrid';
-import { getSingleProduct } from '@/lib/woocommerce';
+import Image from 'next/image';
+import { getSingleProduct, getProductReviews } from '@/lib/woocommerce';
 import { notFound } from 'next/navigation';
 import AddToCart from '@/components/product/AddToCart';
-import ReviewForm from '@/components/product/ReviewForm';
-import WishlistButton from '@/components/product/WishlistButton';
 import ProductGallery from '@/components/product/ProductGallery';
+import ProductTabs from '@/components/product/ProductTabs';
 
 export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
-  const product = await getSingleProduct(id);
+  
+  // Parallel Fetch for speed
+  const [product, reviews] = await Promise.all([
+    getSingleProduct(id),
+    getProductReviews(id)
+  ]);
   
   if (!product) notFound();
 
@@ -26,10 +31,8 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start mb-32">
-          {/* DYNAMIC GALLERY */}
           <div className="relative">
             <ProductGallery images={product.images} name={product.name} />
-            <WishlistButton productId={product.id} />
           </div>
 
           <div className="pt-4">
@@ -38,34 +41,16 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
               Categories: <span className="text-black/40 font-medium">{product.categories?.[0]?.name || 'Luxury Hair'}</span>
             </div>
             <div className="text-black/60 text-sm leading-relaxed mb-12 max-w-md font-light" dangerouslySetInnerHTML={{ __html: product.short_description || product.description }} />
-            
-            {/* ADD TO CART ENGINE (Now handles Price and Variations) */}
             <AddToCart product={product} />
           </div>
         </div>
 
-        <div className="mb-16">
-          <div className="flex gap-12 border-b border-black/5 mb-12 overflow-x-auto no-scrollbar">
-            <button className="pb-6 border-b-2 border-[#8B2632] text-[11px] font-bold uppercase tracking-[0.2em] text-[#8B2632] whitespace-nowrap">About the product</button>
-            <button className="pb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-black/20 whitespace-nowrap">Reviews ({product.rating_count || 0})</button>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-12 md:gap-20">
-            <div className="max-w-2xl">
-              <h3 className="text-3xl font-sans font-bold text-black/80 mb-10 tracking-tight">Specifications</h3>
-              <div className="grid gap-8">
-                {[{ label: 'Weight', value: '0.3 kg' }, { label: 'Color', value: 'Black' }, { label: 'Brand', value: 'Hair' }].map((spec) => (
-                  <div key={spec.label} className="flex items-center py-1">
-                    <span className="w-32 text-[11px] font-bold uppercase tracking-[0.3em] text-[#8B2632]">{spec.label}</span>
-                    <div className="h-8 w-[1px] bg-black/10 mx-6" />
-                    <span className="text-sm text-black/60 font-medium">{spec.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <ReviewForm product={product} />
-          </div>
-        </div>
+        {/* INTELLIGENT TABS: Handles About vs Approved Reviews */}
+        <ProductTabs product={product} reviews={reviews} />
+      </div>
+
+      <div className="relative w-full h-[180px] md:h-[450px] overflow-hidden">
+        <Image src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png" alt="Editorial" fill className="object-cover object-[center_25%]" />
       </div>
 
       <ProductGrid title="Friday Hot Drops" subtitle="Our Shop" />
