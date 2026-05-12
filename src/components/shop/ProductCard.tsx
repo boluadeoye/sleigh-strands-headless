@@ -5,7 +5,7 @@ import { Heart, Star, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function ProductCard({ product, index = 0 }: { product: any, index?: number }) {
   const { addToCart } = useCart();
@@ -16,42 +16,53 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
   const isOutOfStock = product.stock_status === 'outofstock';
   const isWishlisted = wishlistIds.includes(product.id);
 
-  // Logic: Only show rating if there is at least one review
   const hasRating = product.rating_count > 0;
   const displayRating = hasRating ? Number(product.average_rating).toFixed(1) : null;
 
+  // STAGGERED REVEAL PHYSICS
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        delay: (index % 4) * 0.1, 
+        ease: [0.215, 0.61, 0.355, 1] 
+      } 
+    }
+  };
+
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: (index % 4) * 0.1, ease: "easeOut" }}
-      className="group flex flex-col bg-white rounded-[12px] p-2.5 sm:p-4 shadow-sm hover:shadow-md transition-all h-full relative border border-black/[0.02]"
+      className="group flex flex-col bg-white rounded-[12px] p-2.5 sm:p-4 shadow-sm hover:shadow-xl transition-all h-full relative border border-black/[0.02]"
     >
       <div className="relative aspect-[4/5] rounded-[10px] overflow-hidden mb-3 sm:mb-4 bg-[#F9F9F9]">
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent animate-[shimmer_1.5s_infinite] -translate-x-full" 
-               style={{ backgroundSize: '200% 100%' }} />
-        )}
-
         <Link href={`/product/${product.id}`}>
-          <Image
-            src={product.images?.[0]?.src || "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png"}
-            alt={product.name}
-            fill
-            className={`object-cover group-hover:scale-105 transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onLoad={() => setImageLoaded(true)}
-            sizes="(max-width: 768px) 50vw, 33vw"
-          />
+          {/* BOUTIQUE ZOOM ENGINE */}
+          <motion.div 
+            whileHover={{ scale: 1.08 }} 
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative w-full h-full"
+          >
+            <Image
+              src={product.images?.[0]?.src || "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png"}
+              alt={product.name}
+              fill
+              className={`object-cover transition-opacity duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={() => setImageLoaded(true)}
+              sizes="(max-width: 768px) 50vw, 33vw"
+            />
+          </motion.div>
         </Link>
 
         <button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleWishlist(product.id);
-          }}
-          className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] hover:scale-110 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
+          className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] hover:scale-125 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
         >
           <Heart className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} fill={isWishlisted ? "currentColor" : "none"} />
         </button>
@@ -76,13 +87,11 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
               {product.name}
             </h3>
           </Link>
-          
-          {/* DYNAMIC RATING ENGINE */}
           {hasRating && (
             <>
               <span className="text-[#3D1218]/10 text-[14px]">|</span>
               <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-                <Star size={10} className="fill-[#D2A546] text-[#D2A546] sm:w-[12px] sm:h-[12px]" />
+                <Star size={10} className="fill-[#D2A546] text-[#D2A546]" />
                 <span className="text-[11px] sm:text-[13px] font-montserrat font-medium text-[#3D1218]/40">
                   {displayRating}
                 </span>
@@ -95,27 +104,19 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
           ₦{product.price ? parseFloat(product.price).toLocaleString() : '15,900'}
         </div>
 
-        <div className="flex justify-center items-center gap-1.5 sm:gap-2 w-full mt-auto pb-0.5">
-          <div className="flex-[0.42] sm:flex-none sm:w-[92px] flex items-center justify-between bg-[#F5E6E8] px-1.5 sm:px-3 h-[30px] rounded-full min-w-0">
-            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-[#3D1218] hover:opacity-50 transition-opacity shrink-0">
-              <Minus size={10} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
-            </button>
-            <span className="font-outfit font-bold text-[10px] sm:text-[12px] text-[#3D1218] truncate px-1">{quantity}</span>
-            <button onClick={() => setQuantity(quantity + 1)} className="text-[#3D1218] hover:opacity-50 transition-opacity shrink-0">
-              <Plus size={10} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
-            </button>
+        <div className="flex justify-center items-center gap-1.5 w-full mt-auto pb-0.5">
+          <div className="flex-[0.42] flex items-center justify-between bg-[#F5E6E8] px-2 h-[30px] rounded-full">
+            <button onClick={() => setQuantity(quantity + 1)} className="text-[#3D1218] hover:scale-110 transition-transform"><Plus size={10} strokeWidth={2.5} /></button>
+            <span className="font-outfit font-bold text-[10px] text-[#3D1218]">{quantity}</span>
+            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-[#3D1218] hover:scale-110 transition-transform"><Minus size={10} strokeWidth={2.5} /></button>
           </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (!isOutOfStock) addToCart(product, quantity);
-            }}
-            className={`flex-[0.58] sm:flex-none sm:w-[108px] h-[30px] text-[9px] sm:text-[11px] font-outfit font-medium rounded-full transition-all whitespace-nowrap px-1 sm:px-2 min-w-0 ${
-              isOutOfStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-[#F5E6E8] text-[#3D1218] hover:bg-[#3D1218] hover:text-white'
-            }`}
+          <motion.button 
+            whileTap={{ scale: 0.95 }}
+            onClick={(e) => { e.preventDefault(); if (!isOutOfStock) addToCart(product, quantity); }}
+            className={`flex-[0.58] h-[30px] text-[9px] font-outfit font-medium rounded-full transition-all ${isOutOfStock ? 'bg-gray-100 text-gray-400' : 'bg-[#F5E6E8] text-[#3D1218] hover:bg-[#3D1218] hover:text-white'}`}
           >
-            {isOutOfStock ? 'Pre-order' : 'Add to cart'}
-          </button>
+            {isOutOfStock ? 'Sold Out' : 'Add to cart'}
+          </motion.button>
         </div>
       </div>
     </motion.div>
