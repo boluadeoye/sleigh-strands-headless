@@ -8,7 +8,7 @@ export default function Collections() {
         <div className="flex justify-between items-end mb-12">
           <div>
             <span className="text-burgundy text-xs font-bold tracking-[0.3em] mb-2 block">Launched 2026</span>
-            <h2 className="text-[22px] md:text-5xl font-sans text-black leading-tight max-w-[18ch] md:max-w-none">THE LAUNCH COLLECTION (HERO WIGS)</h2>
+            <h2 className="text-[20px] md:text-5xl font-sans text-black leading-[1.2] max-w-[90%] md:max-w-none">THE LAUNCH COLLECTION (HERO WIGS)</h2>
           </div>
           <button className="hidden md:block text-xs font-bold uppercase tracking-widest border-b border-black pb-1">View All</button>
         </div>

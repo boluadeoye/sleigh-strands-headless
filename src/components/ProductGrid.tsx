@@ -16,7 +16,7 @@ export default async function ProductGrid({ title, subtitle, category, id }: { t
               {subtitle}
             </span>
           </div>
-          <h2 className="text-[22px] md:text-[2.75rem] font-sans font-medium text-[#2A0A10] tracking-tight leading-tight max-w-[18ch] md:max-w-none mx-auto">
+          <h2 className="text-[20px] md:text-[2.75rem] font-sans font-medium text-[#2A0A10] tracking-tight leading-[1.2] max-w-[90%] md:max-w-none mx-auto">
             {title}
           </h2>
         </div>
