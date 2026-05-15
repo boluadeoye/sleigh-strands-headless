@@ -15,11 +15,11 @@ export default function TermsPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F0]">
       <Navbar variant="solid" />
-      
+
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden bg-[#4A1018]">
         <div className="absolute inset-0 opacity-70 blur-[2px] scale-105">
-          <img 
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png" 
+          <img
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png"
             className="w-full h-full object-cover"
             alt=""
           />
@@ -38,7 +38,7 @@ export default function TermsPage() {
             <div className="space-y-6 text-sm md:text-base text-black/80 leading-relaxed font-light">
               <p className="font-medium">Hi Sleigh Babe</p>
               <p>We understand that sometimes wigs seen online can look different upon delivery, especially when they arrive unstyled. This can be disappointing, and we want to make sure you never have that experience with us.</p>
-              <p>At Sleigh Strands, customer satisfaction is very important to us. That&apos;s why all our wigs come pre-styled, and styling costs are already included in the price you see, so what you order is exactly the standard you can expect to receive.</p>
+              <p>At Sleigh Strands, customer satisfaction is very important to us. That&apos;s why all our wigs come pre-styled at no extra cost. So, what you order is exactly the standard you should expect to receive.</p>
               <p>Please note that our wigs are high-quality synthetic wigs, carefully selected to give you beautiful, long-lasting styles. While they are designed to look stunning, they will not behave exactly like human or raw hair.</p>
               <div className="space-y-2 pt-4">
                 <p className="font-medium">What you can expect, however, is:</p>
