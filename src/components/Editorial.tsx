@@ -44,7 +44,11 @@ export default function Editorial() {
           viewport={{ once: true }}
           className="text-white/80 font-sans text-[10px] md:text-xs max-w-xl mx-auto mb-6 leading-relaxed font-light"
         >
-          A global pursuit of perfection. We partner exclusively with trusted heritage sources to bring you authentic body, movement, and shine.
+          At sleigh strands we make looking good feel easy.
+          <br /><br />
+          We&apos;re not here to compete with human hair, we&apos;re here to offer a smarter alternative.
+          <br /><br />
+          Simple. Intentional. Effortless.
         </motion.p>
 
         <Link href="/#collections">
