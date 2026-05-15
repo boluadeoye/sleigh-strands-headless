@@ -47,7 +47,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
   const textColor = isSolid ? 'text-[#8B2632]' : 'text-white';
   const pillBg = isSolid ? 'bg-white/40 backdrop-blur-md border-[#8B2632]/10' : 'bg-black/20 border-white/10 backdrop-blur-md';
   const iconBorder = isSolid ? 'border-[#8B2632]/20' : 'border-white/30';
-  const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-6';
+  const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-4';
   const iconFilter = !isSolid ? 'brightness(0) invert(1)' : 'none';
 
   const navLinks = [
@@ -72,8 +72,8 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
         )}
 
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          <div className="flex items-center justify-start min-w-[120px] lg:min-w-[300px]">
-            <Link href="/" className="relative block w-36 h-10 md:w-44 md:h-12 lg:w-64 lg:h-16 xl:w-[300px] xl:h-[80px] transition-all duration-500">
+          <div className="flex items-center justify-start min-w-[140px] lg:min-w-[340px]">
+            <Link href="/" className="relative block w-40 h-10 sm:w-44 sm:h-12 md:w-52 md:h-14 lg:w-72 lg:h-20 xl:w-[340px] xl:h-[90px] transition-all duration-500">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
@@ -99,24 +99,24 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center`}>
               <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
             </button>
-            
+
             <Link href="/account" className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} hover:scale-110 transition-transform flex items-center justify-center overflow-hidden`}>
-              <Image 
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png" 
-                alt="Account" 
-                width={32} 
-                height={32} 
+              <Image
+                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
+                alt="Account"
+                width={32}
+                height={32}
                 style={{ filter: iconFilter }}
-                className="object-contain w-7 h-7 lg:w-9 lg:h-9 scale-[1.5]" 
+                className="object-contain w-7 h-7 lg:w-9 lg:h-9 scale-[1.5]"
               />
             </Link>
 
             <button onClick={() => setIsDrawerOpen(true)} className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} transition-colors flex items-center justify-center`}>
-              <Image 
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/ryvzrz6uupwqxgjycer2.png" 
-                alt="Cart" 
-                width={24} 
-                height={24} 
+              <Image
+                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/ryvzrz6uupwqxgjycer2.png"
+                alt="Cart"
+                width={24}
+                height={24}
                 style={{ filter: iconFilter }}
                 className="object-contain w-5 h-5 lg:w-6 lg:h-6"
               />
@@ -136,11 +136,11 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
               <motion.div variants={menuVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[400px] bg-[#F5E6E8] z-[200] shadow-2xl flex flex-col">
                 <div className="flex items-center justify-between p-8">
                   <Link href="/account" onClick={() => setIsMenuOpen(false)} className="bg-[#8B2632] p-3 rounded-full text-white shadow-lg">
-                    <Image 
-                      src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png" 
-                      alt="Account" 
-                      width={28} 
-                      height={28} 
+                    <Image
+                      src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
+                      alt="Account"
+                      width={28}
+                      height={28}
                       style={{ filter: 'brightness(0) invert(1)' }}
                       className="scale-125"
                     />
