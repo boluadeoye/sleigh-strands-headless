@@ -13,7 +13,7 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <div className="hidden md:block absolute inset-0">
-          <Image 
+          <Image
             src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777646135/blog_assets/tmod9vs49dv3hc8ptpu0.png"
             alt="Sleigh Strands Hero"
             fill
@@ -51,7 +51,9 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 1, ease: [0.215, 0.61, 0.355, 1] }}
           className="text-white/90 font-sans text-[14px] md:text-base max-w-lg mb-10 md:mb-8 leading-relaxed font-light"
         >
-          Real hair for real life. Exceptional quality that doesn&apos;t just look natural, it feels like home. <span className="text-[#D2A546] font-medium">Step into the room and let your hair do the talking.</span>
+          We don&apos;t just send you a wig, we make sure you&apos;re fully ready to sleigh from the moment it arrives.
+          <br /><br />
+          <span className="text-[#D2A546] font-medium">Thoughtful. Intentional. Sleigh Strands.</span>
         </motion.p>
 
         <motion.div
