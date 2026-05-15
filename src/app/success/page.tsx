@@ -30,7 +30,11 @@ export default function SuccessPage() {
         </div>
         <h1 className="text-5xl font-sans text-[#8B2632]">Order Received!</h1>
         <p className="text-black/60 max-w-md mx-auto leading-relaxed">
-          Thank you for choosing Sleigh Strands. Your order has been logged and our team will contact you shortly to finalize delivery.
+          Hi Sleigh Babe 🤍
+          <br /><br />
+          Your order has been successfully placed and we&apos;re excited to prepare it for you. You&apos;ll receive updates once your order has been processed and shipped.
+          <br /><br />
+          Thank you for choosing Sleigh Strands ✨
         </p>
         <Link href="/shop" className="inline-block bg-[#3D1218] text-white px-12 py-4 rounded-full text-[10px] font-bold uppercase tracking-widest">
           Continue Shopping
