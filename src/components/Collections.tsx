@@ -7,8 +7,8 @@ export default function Collections() {
       <div className="max-w-[1440px] mx-auto px-6 md:px-10">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <span className="text-burgundy text-xs font-bold uppercase tracking-[0.3em] mb-2 block">Launched 2024</span>
-            <h2 className="text-3xl md:text-5xl font-sans text-black">The Signature Collections</h2>
+            <span className="text-burgundy text-xs font-bold tracking-[0.3em] mb-2 block">Launched 2026</span>
+            <h2 className="text-3xl md:text-5xl font-sans text-black">THE LAUNCH COLLECTION (HERO WIGS)</h2>
           </div>
           <button className="hidden md:block text-xs font-bold uppercase tracking-widest border-b border-black pb-1">View All</button>
         </div>
@@ -16,8 +16,8 @@ export default function Collections() {
           {products.map((i) => (
             <div key={i} className="group cursor-pointer">
               <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-blush">
-                <Image 
-                  src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png" 
+                <Image
+                  src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png"
                   alt="Product" fill className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur rounded-full opacity-0 group-hover:opacity-100 transition-opacity">

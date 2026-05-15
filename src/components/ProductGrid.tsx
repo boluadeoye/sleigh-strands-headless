@@ -12,7 +12,7 @@ export default async function ProductGrid({ title, subtitle, category, id }: { t
         <div className="text-center mb-12 md:mb-16 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 border border-[#8B2632]/20 bg-transparent px-4 py-1.5 rounded-full mb-4">
             <Store size={12} className="text-[#8B2632]" />
-            <span className="text-[#8B2632] text-[9px] font-medium uppercase tracking-[0.2em]">
+            <span className="text-[#8B2632] text-[9px] font-medium tracking-[0.2em]">
               {subtitle}
             </span>
           </div>
