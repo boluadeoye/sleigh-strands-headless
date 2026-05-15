@@ -36,9 +36,9 @@ const IconSecure = () => (
 /* ─── DATA ──────────────────────────────────────────────────────────────── */
 
 const TRUST_POINTS = [
-  { label: "100% Ethically Sourced", icon: IconEthical },
-  { label: "Priority Worldwide Shipping", icon: IconShipping },
-  { label: "Double-Drawn Excellence", icon: IconExcellence },
+  { label: "Refined Looks, Smarter Spending", icon: IconEthical },
+  { label: "Pre-Styled for Easy Wear", icon: IconShipping },
+  { label: "No Stress, Everything You Need Include", icon: IconExcellence },
   { label: "Secure & Encrypted Checkout", icon: IconSecure },
 ];
 
