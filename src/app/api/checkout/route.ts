@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customer, items, coupon, shipping, customerId } = body;
-    
+    const { customer, items, coupon, shipping, customerId, transactionFee } = body;
+
     const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // STEP 1: Create order as 'pending'
+    // STEP 1: Create order with FULL financial breakdown
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,20 +36,25 @@ export async function POST(req: Request) {
         shipping: addressData,
         line_items: items.map((item: any) => ({
           product_id: Number(item.id),
+          variation_id: item.variationId ? Number(item.variationId) : undefined,
           quantity: Number(item.quantity)
         })),
         shipping_lines: [{
           method_id: shipping?.method_id || 'flat_rate',
           method_title: shipping?.method_title || 'Standard Shipping',
-          total: String(shipping?.cost || 5500)
-        }]
+          total: String(shipping?.cost || 0)
+        }],
+        // FIX: Send coupon to WooCommerce so it registers the discount
+        coupon_lines: coupon ? [{ code: coupon.code }] : [],
+        // FIX: Send VAT as a fee line so the total matches exactly
+        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }]
       }),
     });
 
     const order = await createResponse.json();
     if (!createResponse.ok) throw new Error(order.message || 'Creation Failed');
 
-    // STEP 2: Immediately update to 'processing' to force the Email Trigger
+    // STEP 2: Immediately update to 'processing'
     const updateResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders/${order.id}${auth}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },

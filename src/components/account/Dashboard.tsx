@@ -429,9 +429,31 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
                     <span className="text-sm font-bold text-[#8B2632]">₦{parseFloat(item.total).toLocaleString()}</span>
                   </div>
                 ))}
-                <div className="pt-4 flex justify-between items-center border-t border-black/10 mt-4">
-                  <span className="text-base font-bold text-black/80">Total Paid</span>
-                  <span className="text-xl font-bold text-[#8B2632]">₦{parseFloat(selectedOrder.total).toLocaleString()}</span>
+                <div className="pt-4 space-y-2 border-t border-black/10 mt-4">
+                  <div className="flex justify-between text-xs text-black/60">
+                    <span>Subtotal</span>
+                    <span>₦{selectedOrder.line_items?.reduce((acc: number, item: any) => acc + parseFloat(item.subtotal), 0).toLocaleString()}</span>
+                  </div>
+                  {parseFloat(selectedOrder.discount_total) > 0 && (
+                    <div className="flex justify-between text-xs text-[#8B2632] font-medium">
+                      <span>Discount</span>
+                      <span>-₦{parseFloat(selectedOrder.discount_total).toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-xs text-black/60">
+                    <span>Shipping</span>
+                    <span>₦{parseFloat(selectedOrder.shipping_total).toLocaleString()}</span>
+                  </div>
+                  {selectedOrder.fee_lines?.map((fee: any) => (
+                    <div key={fee.id} className="flex justify-between text-xs text-black/60">
+                      <span>{fee.name}</span>
+                      <span>₦{parseFloat(fee.total).toLocaleString()}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center pt-3 mt-3 border-t border-black/5">
+                    <span className="text-base font-bold text-black/80">Total Paid</span>
+                    <span className="text-xl font-bold text-[#8B2632]">₦{parseFloat(selectedOrder.total).toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
