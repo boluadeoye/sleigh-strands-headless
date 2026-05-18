@@ -121,21 +121,21 @@ export default function CheckoutClient() {
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+    if ((!isFreeShipping && shippingData.cost === 0) || loading || cart.length === 0) return;
     
-    // --- DIAGNOSTIC PROBE START ---
     const pubKey = process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY;
     const sdkReady = typeof (window as any).FlutterwaveCheckout === 'function';
-    
-    console.log("DIAGNOSTIC: Key Value ->", pubKey);
-    console.log("DIAGNOSTIC: SDK Ready ->", sdkReady);
-    
-    alert(`DIAGNOSTIC REPORT:\n1. Public Key: ${pubKey ? 'DETECTED' : 'MISSING (undefined)'}\n2. SDK Ready: ${sdkReady ? 'YES' : 'NO'}\n3. Total: ${total}`);
-    // --- DIAGNOSTIC PROBE END ---
 
-    if ((!isFreeShipping && shippingData.cost === 0) || loading || cart.length === 0) return;
+    if (!pubKey || !sdkReady) {
+      console.error("Checkout Configuration Error: Key or SDK missing.");
+      alert("We are experiencing a temporary connection issue with our payment provider. Please refresh the page or try again in a moment.");
+      return;
+    }
+
     setLoading(true);
     
     try {
+      // 1. Stage the Order in WooCommerce
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,12 +152,7 @@ export default function CheckoutClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order creation failed");
 
-      if (!sdkReady) {
-        alert("CRITICAL: Flutterwave SDK failed to load. Check your internet or layout.tsx script tag.");
-        setLoading(false);
-        return;
-      }
-
+      // 2. Initialize Flutterwave Inline Modal
       (window as any).FlutterwaveCheckout({
         public_key: pubKey,
         tx_ref: `SLEIGH_ORD_${data.orderId}_${Date.now()}`,
@@ -175,6 +170,7 @@ export default function CheckoutClient() {
           logo: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png",
         },
         callback: function (paymentData: any) {
+          // Payment successful - Webhook handles server-side verification
           localStorage.removeItem('sleigh_shipping_state');
           clearCart();
           router.push('/success');
@@ -185,7 +181,8 @@ export default function CheckoutClient() {
       });
 
     } catch (err: any) {
-      alert("ERROR: " + (err.message || "Order failed."));
+      console.error("Checkout Error:", err);
+      alert("Something went wrong while processing your order. Please try again.");
       setLoading(false);
     }
   };
