@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customer, items, coupon, customerId } = body;
+    const { customer, items, coupon, shipping, customerId, transactionFee } = body;
 
     const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
     const ck = process.env.WC_CONSUMER_KEY;
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // FINANCIAL STRIP: Force shipping and fees to 0 for testing
+    // Create order as PENDING with dynamic fees
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,12 +40,12 @@ export async function POST(req: Request) {
           quantity: Number(item.quantity)
         })),
         shipping_lines: [{
-          method_id: 'flat_rate',
-          method_title: 'Standard Shipping',
-          total: "0" // FORCED ZERO
+          method_id: shipping?.method_id || 'flat_rate',
+          method_title: shipping?.method_title || 'Standard Shipping',
+          total: String(shipping?.cost || 0)
         }],
         coupon_lines: coupon ? [{ code: coupon.code }] : [],
-        fee_lines: [{ name: 'VAT & Processing', total: "0", tax_class: '' }] // FORCED ZERO
+        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }]
       }),
     });
 
