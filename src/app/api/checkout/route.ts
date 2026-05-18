@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customer, items, coupon, shipping, customerId, transactionFee } = body;
+    const { customer, items, coupon, customerId } = body;
 
     const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
     const ck = process.env.WC_CONSUMER_KEY;
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // STEP 1: Create order as PENDING
+    // FINANCIAL STRIP: Force shipping and fees to 0 for testing
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,19 +40,18 @@ export async function POST(req: Request) {
           quantity: Number(item.quantity)
         })),
         shipping_lines: [{
-          method_id: shipping?.method_id || 'flat_rate',
-          method_title: shipping?.method_title || 'Standard Shipping',
-          total: String(shipping?.cost || 0)
+          method_id: 'flat_rate',
+          method_title: 'Standard Shipping',
+          total: "0" // FORCED ZERO
         }],
         coupon_lines: coupon ? [{ code: coupon.code }] : [],
-        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }]
+        fee_lines: [{ name: 'VAT & Processing', total: "0", tax_class: '' }] // FORCED ZERO
       }),
     });
 
     const order = await createResponse.json();
     if (!createResponse.ok) throw new Error(order.message || 'Creation Failed');
 
-    // Return the exact WooCommerce total to ensure the frontend charges the correct amount
     return NextResponse.json({ 
       success: true, 
       orderId: order.id,
