@@ -115,17 +115,27 @@ export default function CheckoutClient() {
 
   const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
   const currentShipping = isFreeShipping ? 0 : shippingData.cost;
+  const total = subtotal - discountTotal + currentShipping + TRANSACTION_FEE;
   const amountToFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
   const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
-  const total = subtotal - discountTotal + currentShipping + TRANSACTION_FEE;
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // --- DIAGNOSTIC PROBE START ---
+    const pubKey = process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY;
+    const sdkReady = typeof (window as any).FlutterwaveCheckout === 'function';
+    
+    console.log("DIAGNOSTIC: Key Value ->", pubKey);
+    console.log("DIAGNOSTIC: SDK Ready ->", sdkReady);
+    
+    alert(`DIAGNOSTIC REPORT:\n1. Public Key: ${pubKey ? 'DETECTED' : 'MISSING (undefined)'}\n2. SDK Ready: ${sdkReady ? 'YES' : 'NO'}\n3. Total: ${total}`);
+    // --- DIAGNOSTIC PROBE END ---
+
     if ((!isFreeShipping && shippingData.cost === 0) || loading || cart.length === 0) return;
     setLoading(true);
     
     try {
-      // 1. Stage the Order
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,12 +150,16 @@ export default function CheckoutClient() {
       });
       
       const data = await res.json();
-      
       if (!res.ok) throw new Error(data.error || "Order creation failed");
 
-      // 2. Initialize Flutterwave
+      if (!sdkReady) {
+        alert("CRITICAL: Flutterwave SDK failed to load. Check your internet or layout.tsx script tag.");
+        setLoading(false);
+        return;
+      }
+
       (window as any).FlutterwaveCheckout({
-        public_key: process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY,
+        public_key: pubKey,
         tx_ref: `SLEIGH_ORD_${data.orderId}_${Date.now()}`,
         amount: data.total,
         currency: data.currency,
@@ -161,19 +175,17 @@ export default function CheckoutClient() {
           logo: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png",
         },
         callback: function (paymentData: any) {
-          // Client-side success (Webhook handles the actual verification)
           localStorage.removeItem('sleigh_shipping_state');
           clearCart();
           router.push('/success');
         },
         onclose: function() {
-          // User closed the modal
           setLoading(false);
         }
       });
 
     } catch (err: any) {
-      alert(err.message || "Order failed.");
+      alert("ERROR: " + (err.message || "Order failed."));
       setLoading(false);
     }
   };
