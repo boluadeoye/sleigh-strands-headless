@@ -18,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <head>
+        <Script src="https://checkout.flutterwave.com/v3.js" strategy="beforeInteractive" />
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-F6J2MM8VK3" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`

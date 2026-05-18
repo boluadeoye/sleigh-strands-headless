@@ -15,13 +15,13 @@ const TRANSACTION_FEE = 800;
 export default function CheckoutClient() {
   const { cart, subtotal, updateQuantity, setQuantity, removeFromCart, coupon, setCoupon, discountTotal, clearCart } = useCart();
   const router = useRouter();
-  
+
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
   const [shippingLoading, setShippingLoading] = useState(false);
   const [userSession, setUserSession] = useState<any>(null);
-  
+
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', state: 'LA' });
   const [shippingData, setShippingData] = useState({ cost: 0, method_id: '', method_title: 'Calculating...' });
   const [couponInput, setCouponInput] = useState("");
@@ -38,7 +38,7 @@ export default function CheckoutClient() {
     if (!isMounted) return;
     const savedUser = localStorage.getItem('sleigh_user');
     const sessionState = localStorage.getItem('sleigh_shipping_state');
-    
+
     if (savedUser) {
       const user = JSON.parse(savedUser);
       setUserSession(user);
@@ -123,7 +123,9 @@ export default function CheckoutClient() {
     e.preventDefault();
     if ((!isFreeShipping && shippingData.cost === 0) || loading || cart.length === 0) return;
     setLoading(true);
+    
     try {
+      // 1. Stage the Order
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,14 +138,42 @@ export default function CheckoutClient() {
           transactionFee: TRANSACTION_FEE
         }),
       });
-      if (res.ok) {
-        localStorage.removeItem('sleigh_shipping_state');
-        clearCart();
-        router.push('/success');
-      }
-    } catch (err) {
-      alert("Order failed.");
-    } finally {
+      
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || "Order creation failed");
+
+      // 2. Initialize Flutterwave
+      (window as any).FlutterwaveCheckout({
+        public_key: process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY,
+        tx_ref: `SLEIGH_ORD_${data.orderId}_${Date.now()}`,
+        amount: data.total,
+        currency: data.currency,
+        payment_options: "card, banktransfer, ussd",
+        customer: {
+          email: form.email,
+          phone_number: form.phone,
+          name: form.name,
+        },
+        customizations: {
+          title: "Sleigh Strands",
+          description: `Payment for Order #${data.orderId}`,
+          logo: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png",
+        },
+        callback: function (paymentData: any) {
+          // Client-side success (Webhook handles the actual verification)
+          localStorage.removeItem('sleigh_shipping_state');
+          clearCart();
+          router.push('/success');
+        },
+        onclose: function() {
+          // User closed the modal
+          setLoading(false);
+        }
+      });
+
+    } catch (err: any) {
+      alert(err.message || "Order failed.");
       setLoading(false);
     }
   };
@@ -203,7 +233,7 @@ export default function CheckoutClient() {
 
       <div className="bg-white rounded-[2.5rem] md:rounded-[3rem] p-5 md:p-12 shadow-2xl border border-black/[0.03] h-fit space-y-8 w-full overflow-hidden">
         <h3 className="text-xl font-sans font-bold text-black tracking-tight">Order Summary</h3>
-        
+
         <div className="space-y-5 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
           {cart.map((item) => (
             <div key={`${item.id}-${item.variationId || 0}`} className="flex items-center gap-3 group">
@@ -211,17 +241,16 @@ export default function CheckoutClient() {
                 <Image src={item.image} alt={item.name} fill className="object-cover" />
               </div>
               <div className="flex-1 min-w-0">
-                {/* FIX: Removed truncate and added leading-tight to show variation names clearly */}
                 <p className="text-[10px] font-bold text-black/80 uppercase leading-tight">{item.name}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="flex items-center bg-black/5 rounded-full px-2 py-0.5">
                     <button onClick={() => updateQuantity(item.id, -1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Minus size={8} /></button>
-                    <input 
-                      type="number" 
-                      value={item.quantity} 
+                    <input
+                      type="number"
+                      value={item.quantity}
                       onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 0, item.variationId)}
                       onBlur={(e) => { if (!e.target.value || parseInt(e.target.value) < 1) setQuantity(item.id, 1, item.variationId); }}
-                      className="w-8 text-center bg-transparent text-[9px] font-bold outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                      className="w-8 text-center bg-transparent text-[9px] font-bold outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <button onClick={() => updateQuantity(item.id, 1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Plus size={8} /></button>
                   </div>
@@ -232,7 +261,7 @@ export default function CheckoutClient() {
             </div>
           ))}
         </div>
-
+        
         <div className="space-y-3">
           {!coupon ? (
             <div className="flex gap-2">
@@ -277,7 +306,7 @@ export default function CheckoutClient() {
         </div>
 
         <button type="submit" form="checkout-form" disabled={loading || shippingLoading || cart.length === 0 || (!isFreeShipping && currentShipping === 0)} className="w-full bg-[#FF6B35] text-white py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-xl transition-all active:scale-95 disabled:opacity-50">
-          {loading ? <Loader2 className="animate-spin" size={16} /> : <><Lock size={14}/> Complete Order</>}
+          {loading ? <Loader2 className="animate-spin" size={16} /> : <><Lock size={14}/> Pay Securely</>}
         </button>
       </div>
     </div>

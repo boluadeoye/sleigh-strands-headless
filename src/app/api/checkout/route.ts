@@ -22,13 +22,13 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // STEP 1: Create order with FULL financial breakdown
+    // STEP 1: Create order as PENDING
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        payment_method: 'paystack',
-        payment_method_title: 'Credit/Debit Card',
+        payment_method: 'flutterwave',
+        payment_method_title: 'Flutterwave (Card/Transfer)',
         set_paid: false,
         status: 'pending',
         customer_id: customerId || 0,
@@ -44,9 +44,7 @@ export async function POST(req: Request) {
           method_title: shipping?.method_title || 'Standard Shipping',
           total: String(shipping?.cost || 0)
         }],
-        // FIX: Send coupon to WooCommerce so it registers the discount
         coupon_lines: coupon ? [{ code: coupon.code }] : [],
-        // FIX: Send VAT as a fee line so the total matches exactly
         fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }]
       }),
     });
@@ -54,22 +52,14 @@ export async function POST(req: Request) {
     const order = await createResponse.json();
     if (!createResponse.ok) throw new Error(order.message || 'Creation Failed');
 
-    // STEP 2: Immediately update to 'processing'
-    const updateResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders/${order.id}${auth}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        set_paid: true,
-        status: 'processing',
-        transaction_id: `SLEIGH-TXN-${Date.now()}`
-      }),
-    });
+    // Return the exact WooCommerce total to ensure the frontend charges the correct amount
+    return NextResponse.json({ 
+      success: true, 
+      orderId: order.id,
+      total: order.total,
+      currency: order.currency || 'NGN'
+    }, { status: 200 });
 
-    if (!updateResponse.ok) {
-      console.error("Email trigger update failed, but order was created.");
-    }
-
-    return NextResponse.json({ success: true, orderId: order.id }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
