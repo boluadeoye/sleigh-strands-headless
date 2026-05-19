@@ -47,7 +47,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
   const textColor = isSolid ? 'text-[#8B2632]' : 'text-white';
   const pillBg = isSolid ? 'bg-white/40 backdrop-blur-md border-[#8B2632]/10' : 'bg-black/20 border-white/10 backdrop-blur-md';
   const iconBorder = isSolid ? 'border-[#8B2632]/20' : 'border-white/30';
-  const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-4';
+  const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-2';
   const iconFilter = !isSolid ? 'brightness(0) invert(1)' : 'none';
 
   const navLinks = [
@@ -72,8 +72,9 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
         )}
 
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          <div className="flex items-center justify-start min-w-[140px] lg:min-w-[340px]">
-            <Link href="/" className="relative block w-40 h-10 sm:w-44 sm:h-12 md:w-52 md:h-14 lg:w-72 lg:h-20 xl:w-[340px] xl:h-[90px] transition-all duration-500">
+          {/* LOGO CONTAINER: Aggressively upscaled for vivid presence */}
+          <div className="flex items-center justify-start min-w-[180px] md:min-w-[240px] lg:min-w-[400px] flex-shrink-0">
+            <Link href="/" className="relative block w-60 h-16 max-w-[65vw] md:w-72 md:h-20 lg:w-[400px] lg:h-[110px] transition-all duration-500">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
