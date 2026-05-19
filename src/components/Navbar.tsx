@@ -66,20 +66,22 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
 
   return (
     <>
-      <nav className={`${position} w-full z-[100] px-4 md:px-12 transition-all duration-500 ${navBg} ${isSolid ? 'py-4' : 'pb-8'} subpixel-antialiased`}>
+      <nav className={`${position} w-full z-[100] px-6 md:px-12 transition-all duration-500 ${navBg} ${isSolid ? 'py-4' : 'pb-8'} subpixel-antialiased`}>
         {!isSolid && (
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent -z-10 hidden md:block" />
         )}
 
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          {/* LOGO: Nudged left with balanced dimensions */}
-          <div className="flex items-center justify-start flex-1 min-w-0">
-            <Link href="/" className="relative block w-48 h-12 max-w-[55vw] md:w-80 md:h-24 lg:w-[450px] lg:h-[120px] transition-all duration-500 flex-shrink-0">
+        <div className="max-w-[1440px] mx-auto flex items-center">
+          
+          {/* ZONE 1: LOGO (Left Aligned, flex-1) */}
+          <div className="flex-1 flex items-center justify-start">
+            <Link href="/" className="relative block w-full h-20 md:h-24 lg:h-28 max-w-[50vw] md:max-w-[280px] lg:max-w-[380px] transition-all duration-500">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center mx-4 lg:mx-8 flex-shrink-0">
+          {/* ZONE 2: NAVIGATION (Center Aligned, flex-none) */}
+          <div className="hidden md:flex flex-none items-center justify-center px-4">
             <div className={`flex items-center gap-1 lg:gap-2 rounded-full p-1.5 border ${pillBg} transition-all duration-500 shadow-sm`}>
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -96,13 +98,13 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             </div>
           </div>
 
-          {/* ICONS: Tightened gap to maximize breathing room for logo */}
-          <div className="flex items-center justify-end gap-1.5 md:gap-4 flex-shrink-0">
-            <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center flex-shrink-0`}>
+          {/* ZONE 3: ACTIONS (Right Aligned, flex-1) */}
+          <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
+            <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center`}>
               <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
             </button>
 
-            <Link href="/account" className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} hover:scale-110 transition-transform flex items-center justify-center overflow-hidden flex-shrink-0`}>
+            <Link href="/account" className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} hover:scale-110 transition-transform flex items-center justify-center overflow-hidden`}>
               <Image
                 src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
                 alt="Account"
@@ -113,7 +115,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
               />
             </Link>
 
-            <button onClick={() => setIsDrawerOpen(true)} className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} transition-colors flex items-center justify-center flex-shrink-0`}>
+            <button onClick={() => setIsDrawerOpen(true)} className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} transition-colors flex items-center justify-center`}>
               <Image
                 src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/ryvzrz6uupwqxgjycer2.png"
                 alt="Cart"
@@ -125,7 +127,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
               {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-[#8B2632] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">{cart.length}</span>}
             </button>
 
-            <button className="md:hidden p-2 flex-shrink-0" onClick={() => setIsMenuOpen(true)}>
+            <button className="md:hidden p-2" onClick={() => setIsMenuOpen(true)}>
               <Menu size={32} strokeWidth={1.2} className={textColor} />
             </button>
           </div>
@@ -137,7 +139,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150]" />
               <motion.div variants={menuVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[400px] bg-[#F5E6E8] z-[200] shadow-2xl flex flex-col">
                 <div className="flex items-center justify-between p-8">
-                  <Link href="/account" onClick={() => setIsMenuOpen(false)} className="bg-[#8B2632] p-3 rounded-full text-white shadow-lg flex-shrink-0">
+                  <Link href="/account" onClick={() => setIsMenuOpen(false)} className="bg-[#8B2632] p-3 rounded-full text-white shadow-lg">
                     <Image
                       src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
                       alt="Account"
@@ -147,7 +149,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
                       className="scale-125"
                     />
                   </Link>
-                  <button onClick={() => setIsMenuOpen(false)} className="text-black/40 hover:text-black flex-shrink-0"><X size={32} strokeWidth={1} /></button>
+                  <button onClick={() => setIsMenuOpen(false)} className="text-black/40 hover:text-black"><X size={32} strokeWidth={1} /></button>
                 </div>
                 <div className="flex flex-col px-10 pt-4">
                   {navLinks.map((link, i) => (
@@ -165,7 +167,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 bg-[#F5E6E8] z-[300] flex flex-col items-center justify-center p-6">
-            <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 md:top-12 md:right-12 text-[#8B2632]/40 hover:text-[#8B2632] transition-colors flex-shrink-0"><X size={40} strokeWidth={1} /></button>
+            <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 md:top-12 md:right-12 text-[#8B2632]/40 hover:text-[#8B2632] transition-colors"><X size={40} strokeWidth={1} /></button>
             <form onSubmit={handleSearch} className="w-full max-w-3xl relative">
               <span className="text-[#8B2632] font-sans italic text-2xl md:text-4xl mb-4 block text-center">What are you looking for?</span>
               <input autoFocus type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search collections..." className="w-full bg-transparent border-b-2 border-[#8B2632]/20 text-3xl md:text-6xl font-sans font-bold text-[#8B2632] py-4 outline-none focus:border-[#8B2632] transition-colors text-center placeholder:text-[#8B2632]/10" />
