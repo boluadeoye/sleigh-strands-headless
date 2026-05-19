@@ -49,9 +49,9 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
   const iconBorder = isSolid ? 'border-[#8B2632]/20' : 'border-white/30';
   const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-2';
   
-  // DEFINITIVE FIX: High-precision filter to match #8B2632 exactly in solid mode
+  // RECALIBRATED FILTER: Precision match for #8B2632 (Deep Burgundy)
   const iconFilter = isSolid 
-    ? 'invert(18%) sepia(51%) saturate(3417%) hue-rotate(338deg) brightness(88%) contrast(95%)' 
+    ? 'invert(12%) sepia(68%) saturate(3800%) hue-rotate(340deg) brightness(85%) contrast(105%)' 
     : 'brightness(0) invert(1)';
 
   const navLinks = [
@@ -77,14 +77,14 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
 
         <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-x-8 md:gap-x-0">
           
-          {/* ZONE 1: LOGO */}
+          {/* ZONE 1: LOGO (Nudged left, flex-1) */}
           <div className="flex-1 flex items-center justify-start">
             <Link href="/" className="relative block w-full h-20 md:h-24 lg:h-28 max-w-[42vw] md:max-w-[280px] lg:max-w-[380px] transition-all duration-500">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
 
-          {/* ZONE 2: NAVIGATION */}
+          {/* ZONE 2: NAVIGATION (Center Aligned, flex-none) */}
           <div className="hidden md:flex flex-none items-center justify-center px-4">
             <div className={`flex items-center gap-1 lg:gap-2 rounded-full p-1.5 border ${pillBg} transition-all duration-500 shadow-sm`}>
               {navLinks.map((link) => {
@@ -102,7 +102,7 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             </div>
           </div>
 
-          {/* ZONE 3: ACTIONS */}
+          {/* ZONE 3: ACTIONS (Priority space, flex-none on mobile) */}
           <div className="flex-none md:flex-1 flex items-center justify-end gap-2 md:gap-4">
             <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center`}>
               <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
