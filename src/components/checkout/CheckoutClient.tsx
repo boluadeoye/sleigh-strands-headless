@@ -17,27 +17,33 @@ export default function CheckoutClient() {
   const { cart, subtotal, updateQuantity, setQuantity, removeFromCart, coupon, setCoupon, discountTotal, clearCart } = useCart();
   const router = useRouter();
 
+  // 1. HOISTED STATE DECLARATIONS (Top of component to prevent TDZ errors)
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
   const [shippingLoading, setShippingLoading] = useState(false);
   const [userSession, setUserSession] = useState<any>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  
-  // MEMOIZATION: Prevents duplicate WooCommerce orders
   const [stagedOrder, setStagedOrder] = useState<any>(null);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', state: 'LA' });
+  const [shippingData, setShippingData] = useState({ cost: 0, method_id: 'flat_rate', method_title: 'Standard Shipping' });
+  const [couponInput, setCouponInput] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
+  // 2. INITIALIZATION EFFECTS
   useEffect(() => {
     setIsMounted(true);
     const savedState = localStorage.getItem('sleigh_shipping_state');
     if (savedState) setForm(prev => ({ ...prev, state: savedState }));
   }, []);
 
-  // INTEGRITY GUARD: Clear staged order if cart or state changes
+  // 3. INTEGRITY EFFECTS
   useEffect(() => {
     if (stagedOrder) setStagedOrder(null);
   }, [cart, subtotal]);
 
+  // 4. DATA FETCHING EFFECTS
   useEffect(() => {
     if (!isMounted) return;
     const savedUser = localStorage.getItem('sleigh_user');
@@ -83,7 +89,7 @@ export default function CheckoutClient() {
         const data = await res.json();
         if (res.ok) {
           setShippingData(data);
-          setStagedOrder(null); // Clear memoized order if shipping cost changes
+          setStagedOrder(null);
         }
       } catch (err) {
         setShippingData({ cost: 0, method_id: 'Error', method_title: 'Error' });
@@ -94,12 +100,7 @@ export default function CheckoutClient() {
     fetchShipping();
   }, [form.state, profileLoading, isMounted]);
 
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', state: 'LA' });
-  const [shippingData, setShippingData] = useState({ cost: 0, method_id: 'flat_rate', method_title: 'Standard Shipping' });
-  const [couponInput, setCouponInput] = useState("");
-  const [couponLoading, setCouponLoading] = useState(false);
-  const [couponError, setCouponError] = useState("");
-
+  // 5. LOGIC HELPERS
   const handleApplyCoupon = async () => {
     if (!couponInput || couponLoading) return;
     setCouponLoading(true);
@@ -114,7 +115,7 @@ export default function CheckoutClient() {
       if (res.ok) {
         setCoupon(data);
         setCouponInput("");
-        setStagedOrder(null); // Clear memoized order if discount changes
+        setStagedOrder(null);
       } else {
         setCouponError(data.error);
       }
@@ -139,7 +140,7 @@ export default function CheckoutClient() {
       amount: orderData.total,
       currency: orderData.currency,
       payment_options: "card, banktransfer, ussd",
-      show_conf_modal: false, // DEFINITIVE FIX: Suppresses generic browser alert
+      show_conf_modal: false,
       customer: {
         email: form.email,
         phone_number: form.phone,
@@ -174,7 +175,6 @@ export default function CheckoutClient() {
       return;
     }
 
-    // RECOVERY PATH: Use existing order if available
     if (stagedOrder) {
       setLoading(true);
       initializePayment(stagedOrder);
@@ -200,7 +200,7 @@ export default function CheckoutClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order creation failed");
 
-      setStagedOrder(data); // Memoize for recovery
+      setStagedOrder(data);
       initializePayment(data);
 
     } catch (err: any) {
