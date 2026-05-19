@@ -15,25 +15,25 @@ export default function Home() {
       <Navbar variant="transparent" />
       <Hero />
       <TrustBar />
-      
+
       {/* Standard Mode: Full view with shoulders */}
       <DoubleModel mode="standard" priority={true} />
-      
+
       <ProductGrid 
         id="collections" 
         title="THE LAUNCH COLLECTION (HERO WIGS)" 
-        subtitle="Launched 2026"
+        subtitle="Launched 2026" 
         category="hero-wigs"
       />
 
       {/* Compact Mode: Tight crop, no shoulders, sits flush with Editorial */}
       <DoubleModel mode="compact" priority={false} />
       <Editorial />
-      
+
       <ProductGrid 
         title="Friday Hot Drops" 
         subtitle="Our Shop" 
-        category="hot-drops"
+        category="friday-hot-drops"
       />
 
       <Testimonials />
