@@ -17,10 +17,12 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [orders, setOrders] = useState<any[]>([]);
   const [wishlistProducts, setWishlistProducts] = useState<any[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
   const [customer, setCustomer] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
-  const[selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isDeletingToken, setIsDeletingToken] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [orderFilter, setOrderFilter] = useState('All');
   const [updateStatus, setUpdateStatus] = useState<{type: 'success' | 'error', msg: string} | null>(null);
@@ -28,8 +30,8 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const [profile, setProfile] = useState({ firstName: '', lastName: '', email: user.email, username: '' });
-  const[passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
-  const[addressForm, setAddressForm] = useState({
+  const [passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
+  const [addressForm, setAddressForm] = useState({
     firstName: '', lastName: '', phone: '', address1: '', city: '', state: 'LA'
   });
 
@@ -39,17 +41,18 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
       const result = await res.json();
       if (result.error) throw new Error(result.error);
 
-      const { orders: ordersData, customer: customerData, wishlistProducts: wishlistData } = result;
-      
+      const { orders: ordersData, customer: customerData, wishlistProducts: wishlistData, paymentTokens } = result;
+
       if (Array.isArray(ordersData)) {
         const sorted = [...ordersData].sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
         setOrders(sorted);
       }
-
       if (Array.isArray(wishlistData)) {
         setWishlistProducts(wishlistData);
       }
-
+      if (Array.isArray(paymentTokens)) {
+        setPaymentMethods(paymentTokens);
+      }
       if (customerData && customerData.id) {
         setCustomer(customerData);
         setProfile({
@@ -159,6 +162,23 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
     }
   };
 
+  const handleDeleteToken = async (tokenId: string) => {
+    if (!confirm("Are you sure you want to remove this payment method?")) return;
+    setIsDeletingToken(tokenId);
+    try {
+      const res = await fetch(`/api/account/payment-methods?id=${tokenId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setPaymentMethods(prev => prev.filter(t => t.id !== tokenId));
+      } else {
+        alert("Failed to remove payment method.");
+      }
+    } catch (err) {
+      alert("Connection error.");
+    } finally {
+      setIsDeletingToken(null);
+    }
+  };
+
   const getStatusStyles = (status: string) => {
     switch (status.toLowerCase()) {
       case 'processing': return 'bg-[#FDF6B2] text-[#723B13]';
@@ -265,7 +285,6 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
           </div>
         )}
 
-        {/* WIRED SAVED TAB: Replaced empty text with dynamic grid */}
         {activeTab === 'Saved' && (
           <div className="py-4">
             {loading ? (
@@ -309,15 +328,56 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
         )}
 
         {activeTab === 'Payment method' && (
-          <div className="space-y-8">
-            <div className="bg-white border border-black/10 rounded-2xl p-6 md:p-8">
-              <div className="flex items-center gap-4 mb-2">
-                <div className="w-4 h-4 rounded-full border-4 border-[#FF6B35] flex items-center justify-center" />
-                <span className="text-sm font-bold text-black/80">Debit or credit cards</span>
-                <span className="bg-[#00C3F7] text-white text-[8px] px-2 py-0.5 rounded-sm font-bold tracking-wider">Secured by Paystack</span>
-              </div>
-              <p className="text-xs text-black/50 italic ml-8 mb-8">Complete your purchase using your preferred card</p>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-[#8B2632]">Saved Cards</h3>
+              <span className="bg-[#FDF8F0] text-[#8B2632] text-[9px] px-3 py-1 rounded-full font-bold tracking-widest border border-[#8B2632]/10">
+                SECURED BY FLUTTERWAVE
+              </span>
             </div>
+            
+            {loading ? (
+              <Loader2 className="animate-spin text-[#8B2632]" />
+            ) : paymentMethods.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {paymentMethods.map((token: any) => (
+                  <div key={token.id} className="bg-white border border-black/10 rounded-2xl p-6 relative overflow-hidden group">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-6 bg-black/5 rounded flex items-center justify-center text-[10px] font-bold uppercase">
+                          {token.card_type || 'CARD'}
+                        </div>
+                        <span className="text-sm font-bold text-black/80">•••• {token.last4 || '****'}</span>
+                      </div>
+                      <button 
+                        onClick={() => handleDeleteToken(token.id)}
+                        disabled={isDeletingToken === token.id}
+                        className="text-black/30 hover:text-red-500 transition-colors"
+                      >
+                        {isDeletingToken === token.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                      </button>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="space-y-1">
+                        <span className="text-[8px] uppercase tracking-widest text-black/40">Expires</span>
+                        <p className="text-xs font-medium text-black/80">{token.expiry_month || 'MM'}/{token.expiry_year || 'YY'}</p>
+                      </div>
+                      {token.is_default && (
+                        <span className="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded uppercase tracking-widest">Default</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-black/[0.02] border border-black/[0.03] rounded-2xl p-8 text-center space-y-3">
+                <CreditCard size={32} className="mx-auto text-black/20 mb-2" />
+                <p className="text-sm font-bold text-black/60">No saved payment methods</p>
+                <p className="text-xs text-black/40 max-w-sm mx-auto leading-relaxed">
+                  Save your card securely during your next checkout for a faster, seamless experience.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
