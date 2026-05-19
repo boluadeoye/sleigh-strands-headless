@@ -3,8 +3,6 @@ import { useState } from "react";
 import Image from 'next/image';
 import { Plus, Minus } from 'lucide-react';
 
-/* ─── DATA: THE FIRST 4 QUESTIONS ────────────────────────────────────────── */
-
 const FAQ_DATA = [
   {
     id: 1,
@@ -33,25 +31,19 @@ export default function FAQValueGrid() {
 
   return (
     <>
-      {/* 1. FAQ SECTION: COORDINATE LOCKED */}
       <section className="bg-white py-24 overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-6 md:px-14">
           <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-stretch">
-
-            {/* LEFT: FAQ ACCORDION */}
             <div className="w-full md:w-[55%] flex flex-col justify-center">
-              {/* Badge: Machined Pill */}
               <div className="inline-flex items-center gap-2 border border-[#3D1218]/10 rounded-full px-4 py-1.5 mb-8 self-start">
                 <div className="w-4 h-4 bg-[#3D1218]/5 rounded-sm flex items-center justify-center">
                   <div className="w-1.5 h-1.5 bg-[#3D1218] rounded-full" />
                 </div>
                 <span className="text-[#3D1218] text-[10px] font-bold uppercase tracking-[0.3em]">FAQs</span>
               </div>
-
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-medium text-[#0C0608] mb-12 tracking-tighter leading-[1.1]">
                 We answer to you
               </h2>
-
               <div className="space-y-5">
                 {FAQ_DATA.map((faq) => (
                   <div
@@ -69,7 +61,6 @@ export default function FAQValueGrid() {
                         {openId === faq.id ? <Minus size={18} strokeWidth={2.5} /> : <Plus size={18} strokeWidth={2.5} />}
                       </div>
                     </div>
-
                     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
                       openId === faq.id ? 'max-h-40 mt-6 opacity-100' : 'max-h-0 opacity-0'
                     }`}>
@@ -81,29 +72,23 @@ export default function FAQValueGrid() {
                 ))}
               </div>
             </div>
-
-            {/* RIGHT: HERO IMAGE */}
             <div className="w-full md:w-[45%] relative min-h-[500px] md:min-h-0 rounded-[32px] overflow-hidden shadow-2xl">
               <Image
                 src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776178787/blog_assets/pl11hvykxgybygohihqc.png"
-                alt="Sleigh Strands FAQ"
-                fill
-                className="object-cover object-center hover:scale-105 transition-transform duration-1000"
-                priority
+                alt="Sleigh Strands FAQ" fill className="object-cover object-center hover:scale-105 transition-transform duration-1000" priority
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. VALUE GRID SECTION: PRESERVED LUXURY WEIGHT */}
       <section className="bg-[#FDF8F0] py-24">
         <div className="max-w-[1440px] mx-auto px-6 md:px-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* Burgundy Block */}
-            <div className="bg-[#3D1218] p-10 md:p-16 rounded-[32px] text-white flex flex-col justify-between min-h-[380px] shadow-xl relative overflow-hidden">
+            <div className="bg-[#3D1218] p-10 md:p-16 rounded-[32px] text-white flex flex-col justify-between min-h-[420px] shadow-xl relative overflow-hidden">
               <div className="relative z-10">
-                <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter mb-8">
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter mb-14">
                   Trusted by 500k+<br/>Women Worldwide
                 </h3>
                 <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-sm">
@@ -113,9 +98,9 @@ export default function FAQValueGrid() {
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
             </div>
 
-            {/* White Block: SURGICAL EDITORIAL UPDATE */}
-            <div className="bg-white p-10 md:p-16 rounded-[32px] text-[#0C0608] flex flex-col justify-between min-h-[380px] shadow-xl border border-black/[0.02]">
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter mb-8">
+            {/* White Block */}
+            <div className="bg-white p-10 md:p-16 rounded-[32px] text-[#0C0608] flex flex-col justify-between min-h-[420px] shadow-xl border border-black/[0.02]">
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter mb-14">
                 Unrivaled<br/>Authenticity
               </h3>
               <p className="text-sm md:text-base text-[#0C0608]/60 leading-relaxed max-w-sm">
@@ -129,7 +114,7 @@ export default function FAQValueGrid() {
           </div>
 
           {/* Gold Block */}
-          <div className="bg-[#D2A546] p-10 md:p-16 rounded-[32px] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-12 shadow-xl">
+          <div className="bg-[#D2A546] p-10 md:p-16 rounded-[32px] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-12 shadow-xl min-h-[280px]">
             <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium tracking-tighter shrink-0 leading-tight">
               Expertly <br className="hidden md:block"/>Vetted
             </h3>

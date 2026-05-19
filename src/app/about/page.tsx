@@ -13,19 +13,19 @@ export default function AboutPage() {
     <main className="min-h-screen bg-cream">
       <Navbar variant="solid" />
 
-      {/* 1. HERO: Sleek & Spacious */}
-      <section className="relative h-[45vh] md:h-[55vh] flex items-center justify-center overflow-hidden">
+      {/* 1. HERO: Recalibrated for Zero Collision */}
+      <section className="relative min-h-[50vh] md:min-h-[60vh] flex flex-col items-center justify-center overflow-hidden pt-40 md:pt-52 pb-20">
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg" 
+          <Image
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg"
             alt="Backdrop" fill className="object-cover blur-md scale-105 opacity-40"
           />
           <div className="absolute inset-0 bg-black/5" />
         </div>
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 text-white font-sans text-5xl md:text-7xl font-light tracking-[0.3em] uppercase drop-shadow-md"
+          className="relative z-10 text-white font-sans text-5xl md:text-8xl font-light tracking-[0.4em] uppercase drop-shadow-md text-center"
         >
           ABOUT US
         </motion.h1>
@@ -35,17 +35,17 @@ export default function AboutPage() {
       <section className="relative z-20 -mt-16 md:-mt-24 max-w-[1440px] mx-auto px-4 md:px-12 pb-32">
         <div className="bg-white rounded-[3rem] md:rounded-[4rem] shadow-2xl p-6 md:p-16 lg:p-24">
           
-          {/* Tab Navigation: Single Line Mobile */}
-          <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 md:gap-4 mb-16 md:mb-24 pb-2">
-            <button 
+          {/* Tab Navigation */}
+          <div className="flex justify-center gap-3 md:gap-6 mb-16 md:mb-24">
+            <button
               onClick={() => setActiveTab('brand')}
-              className={`whitespace-nowrap px-8 py-3.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shrink-0 ${activeTab === 'brand' ? 'bg-burgundy text-white shadow-lg' : 'border border-burgundy/20 text-burgundy hover:bg-blush'}`}
+              className={`px-8 py-4 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shrink-0 ${activeTab === 'brand' ? 'bg-burgundy text-white shadow-lg' : 'border border-burgundy/20 text-burgundy hover:bg-blush'}`}
             >
               About Sleigh Strands
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('team')}
-              className={`whitespace-nowrap px-8 py-3.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shrink-0 ${activeTab === 'team' ? 'bg-burgundy text-white shadow-lg' : 'border border-burgundy/20 text-burgundy hover:bg-blush'}`}
+              className={`px-8 py-4 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shrink-0 ${activeTab === 'team' ? 'bg-burgundy text-white shadow-lg' : 'border border-burgundy/20 text-burgundy hover:bg-blush'}`}
             >
               About The Team
             </button>
@@ -53,18 +53,16 @@ export default function AboutPage() {
 
           <AnimatePresence mode="wait">
             {activeTab === 'brand' ? (
-              <motion.div 
-                key="brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              <motion.div
+                key="brand" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
                 className="space-y-24 md:space-y-32"
               >
-                {/* Intro Text */}
                 <div className="max-w-5xl space-y-8 text-ink/80 text-lg md:text-xl leading-relaxed font-light">
                   <p>At Sleigh Strands, we believe switching up your look should be easy, affordable, and still feel premium.</p>
                   <p>Our wigs are designed to give you the freedom to experiment with different styles, colors, and lengths without damaging your natural hair or spending excessively to look good.</p>
                   <p>We specialize in high-quality blend wigs, carefully selected to give you beautiful, ready-to-wear styles that fit effortlessly into your everyday life.</p>
                 </div>
 
-                {/* Section: What Makes Us Different */}
                 <div className="space-y-10">
                   <div className="flex items-center gap-6">
                     <GoldStar className="w-8 h-8 md:w-10 md:h-10" />
@@ -79,13 +77,9 @@ export default function AboutPage() {
                         </li>
                       ))}
                     </ul>
-                    <p className="text-ink/70 text-base md:text-xl leading-relaxed max-w-4xl">
-                      Once properly worn and maintained, they give a polished look that blends seamlessly, so you can step out with confidence every time
-                    </p>
                   </div>
                 </div>
 
-                {/* Section: Smart Beauty */}
                 <div className="space-y-10">
                   <div className="flex items-center gap-6">
                     <GoldStar className="w-8 h-8 md:w-10 md:h-10" />
@@ -98,46 +92,16 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Section: WHY YOU SHOULD TRY */}
-                <div className="space-y-10">
-                  <SBadge text="WHY YOU SHOULD TRY SLEIGH STRANDS" />
-                  <ul className="space-y-6">
-                    {[
-                      'Instantly transforms your look',
-                      'Perfect for everyday wear or quick switches',
-                      'Saves you time on styling',
-                      'Gives you variety without long-term commitment'
-                    ].map((item) => (
-                      <li key={item} className="flex items-center gap-4 text-base md:text-xl font-medium text-ink/80">
-                        <GoldStar className="w-3.5 h-3.5 md:w-4 md:h-4" /> {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-ink/70 text-base md:text-xl leading-relaxed max-w-4xl">
-                    Whether you&apos;re trying blend wigs for the first time or you&apos;ve had mixed experiences before, Sleigh Strands is here to give you a better, more reliable experience
-                  </p>
-                </div>
-
-                {/* FOUNDER SECTION: Elite Framing & Mobile Restoration */}
                 <div className="w-full">
-                  {/* Desktop: Wide Asset with Subtle Double-Border Frame */}
                   <div className="hidden md:block p-1.5 rounded-[3.2rem] border border-burgundy/10 bg-white shadow-sm">
                     <div className="relative w-full aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl border border-burgundy/5">
-                      <Image 
-                        src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777102560/blog_assets/satt0gqmz9vbix5sqg6z.png" 
+                      <Image
+                        src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777102560/blog_assets/satt0gqmz9vbix5sqg6z.png"
                         alt="Founder's Note" fill className="object-contain"
                       />
                     </div>
                   </div>
-                  
-                  {/* Mobile: Restored Vertical Stack (Approved Layout) */}
-                  <div 
-                    className="md:hidden relative bg-burgundy rounded-[2.5rem] overflow-hidden pt-12 px-6 pb-32 shadow-2xl"
-                    style={{ 
-                      backgroundImage: 'url(https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256302/blog_assets/qz5g1o0uix1pxdf5683i.png)',
-                      backgroundRepeat: 'repeat-x', backgroundPosition: 'bottom', backgroundSize: 'auto 80px'
-                    }}
-                  >
+                  <div className="md:hidden relative bg-burgundy rounded-[2.5rem] overflow-hidden pt-12 px-6 pb-32 shadow-2xl">
                     <div className="flex flex-col items-center text-center space-y-8 relative z-10">
                       <div className="relative w-48 h-60 rounded-2xl overflow-hidden border-2 border-white/10 shadow-xl">
                         <Image src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256282/blog_assets/nmgtkfnbogjddzwpdjza.jpg" alt="Founder" fill className="object-cover" />
@@ -147,45 +111,11 @@ export default function AboutPage() {
                         <p>Sleigh Strands was created with one goal, to make looking good feel easy, accessible, and stress-free.</p>
                         <p>Wearing blend wigs doesn&apos;t make you cheap, tacky, or less than. It simply means you&apos;ve found a smarter way to show up as your best self.</p>
                       </div>
-                      <p className="text-lg font-sans italic text-gold-light">Your hair, your choice. Always.</p>
+                      <p className="text-lg font-sans italic text-gold">Your hair, your choice. Always.</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Section: Our Promise */}
-                <div className="space-y-10">
-                  <SBadge text="OUR PROMISE" />
-                  <p className="max-w-4xl text-ink/70 text-base md:text-xl leading-relaxed">
-                    At Sleigh Strands, what you see is what you get. Our wigs are accurately represented and pre-styled to match the standard displayed. We focus on delivering consistency, so you can shop with confidence every time.
-                  </p>
-                </div>
-
-                {/* Section: Our Collections Grid */}
-                <div className="space-y-16">
-                  <SBadge text="OUR COLLECTIONS" />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
-                    {[
-                      { title: "Blend Wigs", sub: "stylish, affordable, and easy to wear." },
-                      { title: "Futura Wigs", sub: "our highest quality synthetic option, offering an even more refined finish." }
-                    ].map((col, i) => (
-                      <div key={i} className="relative aspect-[4/5] rounded-[3rem] md:rounded-[4rem] overflow-hidden group cursor-pointer shadow-xl">
-                        <Image 
-                          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg" 
-                          alt={col.title} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-burgundy via-burgundy/40 to-transparent opacity-95" />
-                        <div className="absolute bottom-10 md:bottom-16 left-6 md:left-10 right-6 md:right-10 text-white text-center">
-                          <h4 className="text-4xl md:text-5xl font-sans font-medium mb-4 tracking-tighter">{col.title}</h4>
-                          <p className="text-[10px] md:text-xs opacity-90 font-medium lowercase tracking-[0.15em] max-w-[280px] mx-auto leading-relaxed">
-                            {col.sub}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Final Quote: Red Ink Manifesto */}
                 <div className="text-center py-16 md:py-24 space-y-10 md:space-y-12">
                   <div className="flex justify-center"><GoldStar className="w-12 h-12 md:w-16 md:h-16" /></div>
                   <h2 className="text-3xl md:text-6xl font-sans font-bold text-burgundy tracking-tighter leading-[1.1] max-w-5xl mx-auto">
@@ -196,9 +126,25 @@ export default function AboutPage() {
                     <p>Here&apos;s to sleighing your strands</p>
                   </div>
                 </div>
-
               </motion.div>
-            ) : null}
+            ) : (
+              <motion.div
+                key="team" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+                className="py-20 text-center space-y-12"
+              >
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <h2 className="text-4xl md:text-6xl font-sans font-bold text-burgundy tracking-tighter italic">Meet the Visionaries</h2>
+                  <p className="text-lg text-ink/60 leading-relaxed font-light">
+                    We are currently curating our team profiles to give you a deeper look into the hands that style your strands.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="aspect-[3/4] bg-blush/30 rounded-[2.5rem] border border-burgundy/5 animate-pulse" />
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </section>
