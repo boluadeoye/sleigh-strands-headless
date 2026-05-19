@@ -27,7 +27,13 @@ export default function ValueGrid() {
           </div>
           <div className="bg-white p-12">
             <h3 className="text-3xl font-sans mb-4">Unrivaled Authenticity</h3>
-            <p className="text-sm text-black/60 leading-relaxed">Curation without compromise. We deliver the exact density and length you demand.</p>
+            <p className="text-sm text-black/60 leading-relaxed">
+              We believe in getting it right the first time.
+              <br /><br />
+              From how our wigs are styled to how they are delivered, every detail reflects accuracy, honesty, and intention.
+              <br /><br />
+              Because your satisfaction matters.
+            </p>
           </div>
           <div className="bg-gold p-12 text-white">
             <h3 className="text-3xl font-sans mb-4">Expertly Vetted</h3>

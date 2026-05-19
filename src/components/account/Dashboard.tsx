@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, ShoppingBag, Heart, MapPin, CreditCard, Settings, Eye, EyeOff, Loader2, X, Package, Trash2, Edit2, CheckCircle, Sliders, Calendar, CheckCircle2, ArrowUp, ArrowDown } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Heart, MapPin, CreditCard, Settings, Eye, EyeOff, Loader2, X, Package, Trash2, Edit2, CheckCircle, Sliders, Calendar, CheckCircle2, ArrowUp, ArrowDown, FilterX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '@/components/shop/ProductCard';
 
@@ -25,6 +25,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [orderFilter, setOrderFilter] = useState('All');
+  const [filterDate, setFilterDate] = useState(''); // NEW: Date filter state
   const [updateStatus, setUpdateStatus] = useState<{type: 'success' | 'error', msg: string} | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [showPassword, setShowPassword] = useState(false);
@@ -258,29 +259,74 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
                   {f}
                 </button>
               ))}
-              <button onClick={handleSort} className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-white border border-black/10 rounded-md text-[10px] text-black/60 hover:bg-black/5 transition-all active:scale-95">
-                <Calendar size={12} /> Date {sortOrder === 'desc' ? <ArrowDown size={12} className="text-[#FF6B35]" /> : <ArrowUp size={12} className="text-[#FF6B35]" />}
-              </button>
-            </div>
-            <div className="space-y-2">
-              {loading ? <Loader2 className="animate-spin text-[#8B2632]" /> : orders.filter(o => orderFilter === 'All' || o.status.toLowerCase() === orderFilter.toLowerCase()).map((order: any) => (
-                <div key={order.id} className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-4 border-b border-black/5">
-                  <div className="flex items-center gap-3 w-32">
-                    <div className="w-2 h-2 rounded-full bg-[#FF6B35]" />
-                    <span className="text-xs text-black/80">Order #{order.id}</span>
-                  </div>
-                  <span className="text-xs text-black/60 w-24">{new Date(order.date_created).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                  <div className="w-24">
-                    <span className={`text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest ${getStatusStyles(order.status)}`}>{order.status}</span>
-                  </div>
-                  <span className="text-xs text-black/80 w-20">₦{parseFloat(order.total).toLocaleString()}</span>
-                  <div className="w-20 flex md:justify-end">
-                    <button onClick={(e) => { e.preventDefault(); setSelectedOrder(order); }} className="flex items-center gap-2 px-5 py-2 border border-black/20 rounded-full text-[10px] text-black/80 hover:bg-black hover:text-white transition-all active:scale-95">
-                      <Eye size={12} /> View
-                    </button>
-                  </div>
+              
+              {/* CALENDAR FILTER UI */}
+              <div className="ml-auto flex items-center gap-2">
+                <div className="relative">
+                  <button className={`flex items-center gap-2 px-3 py-1.5 border rounded-md text-[10px] transition-all ${filterDate ? 'bg-[#8B2632] text-white border-[#8B2632]' : 'bg-white text-black/60 border-black/10 hover:bg-black/5'}`}>
+                    <Calendar size={12} />
+                    {filterDate ? new Date(filterDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Filter by Date'}
+                  </button>
+                  <input 
+                    type="date" 
+                    value={filterDate}
+                    onChange={(e) => setFilterDate(e.target.value)}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  />
                 </div>
-              ))}
+                {filterDate && (
+                  <button 
+                    onClick={() => setFilterDate('')}
+                    className="p-1.5 bg-red-50 text-red-500 rounded-md hover:bg-red-100 transition-colors"
+                    title="Clear Date Filter"
+                  >
+                    <FilterX size={14} />
+                  </button>
+                )}
+                <button onClick={handleSort} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-black/10 rounded-md text-[10px] text-black/60 hover:bg-black/5 transition-all active:scale-95">
+                  {sortOrder === 'desc' ? <ArrowDown size={12} className="text-[#FF6B35]" /> : <ArrowUp size={12} className="text-[#FF6B35]" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {loading ? <Loader2 className="animate-spin text-[#8B2632]" /> : 
+                orders.filter(o => {
+                  const matchesStatus = orderFilter === 'All' || o.status.toLowerCase() === orderFilter.toLowerCase();
+                  const matchesDate = !filterDate || o.date_created.startsWith(filterDate);
+                  return matchesStatus && matchesDate;
+                }).length > 0 ? (
+                orders.filter(o => {
+                  const matchesStatus = orderFilter === 'All' || o.status.toLowerCase() === orderFilter.toLowerCase();
+                  const matchesDate = !filterDate || o.date_created.startsWith(filterDate);
+                  return matchesStatus && matchesDate;
+                }).map((order: any) => (
+                  <div key={order.id} className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-4 border-b border-black/5">
+                    <div className="flex items-center gap-3 w-32">
+                      <div className="w-2 h-2 rounded-full bg-[#FF6B35]" />
+                      <span className="text-xs text-black/80">Order #{order.id}</span>
+                    </div>
+                    <span className="text-xs text-black/60 w-24">{new Date(order.date_created).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <div className="w-24">
+                      <span className={`text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest ${getStatusStyles(order.status)}`}>{order.status}</span>
+                    </div>
+                    <span className="text-xs text-black/80 w-20">₦{parseFloat(order.total).toLocaleString()}</span>
+                    <div className="w-20 flex md:justify-end">
+                      <button onClick={(e) => { e.preventDefault(); setSelectedOrder(order); }} className="flex items-center gap-2 px-5 py-2 border border-black/20 rounded-full text-[10px] text-black/80 hover:bg-black hover:text-white transition-all active:scale-95">
+                        <Eye size={12} /> View
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-12 text-center space-y-2">
+                  <Package size={32} className="mx-auto text-black/10" />
+                  <p className="text-sm text-black/40 italic">No orders found matching your filters.</p>
+                  {filterDate && (
+                    <button onClick={() => setFilterDate('')} className="text-[10px] font-bold text-[#8B2632] uppercase tracking-widest underline">Clear date filter</button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
