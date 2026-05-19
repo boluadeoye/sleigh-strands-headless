@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 /* ─── ICONS ───────────────────────────────────────────────────────────────── */
-
 const IconStar = () => (
   <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="shrink-0">
     <path d="M7 0L8.89 5.11L14 7L8.89 8.89L7 14L5.11 8.89L0 7L5.11 5.11L7 0Z" fill="#D2A546" />
@@ -154,7 +153,6 @@ function SocialRow({ className = "" }: { className?: string }) {
 
 export default function Footer() {
   const [email, setEmail] = useState("");
-  // LOGIC FIX: Added 'exists' state
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "exists">("idle");
 
   useEffect(() => {
@@ -181,8 +179,7 @@ export default function Footer() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      
-      // LOGIC FIX: Handle 409 Conflict (Existing User)
+
       if (res.status === 409) {
         setStatus("exists");
         setEmail("");
@@ -190,7 +187,7 @@ export default function Footer() {
       }
 
       if (!res.ok) throw new Error("Failed");
-      
+
       setStatus("success");
       setEmail("");
     } catch {
@@ -200,7 +197,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#3D1218] text-white overflow-hidden">
-
       {/* MOBILE BLOCK */}
       <div className="md:hidden px-6 pt-10 pb-10 flex flex-col gap-8">
         <div className="flex flex-col">
@@ -248,10 +244,9 @@ export default function Footer() {
                 {status === "loading" ? "···" : "Submit"}
               </button>
             </form>
-            {/* Status Feedback: Absolute to prevent layout shift */}
             <div className="absolute -bottom-5 left-0 w-full h-4">
               {status === "success" && <p className="text-[9px] text-[#D2A546] font-medium">Successfully subscribed!</p>}
-              {status === "exists" && <p className="text-[9px] text-[#D2A546] font-medium">You're already on the list, Sleigh Queen.</p>}
+              {status === "exists" && <p className="text-[9px] text-[#D2A546] font-medium">You're already on the list, Sleigh Babe.</p>}
               {status === "error" && <p className="text-[9px] text-red-400 font-medium">Please enter a valid email.</p>}
             </div>
           </div>
@@ -333,10 +328,9 @@ export default function Footer() {
                 {status === "loading" ? "···" : "Submit"}
               </button>
             </form>
-            {/* Status Feedback: Absolute to prevent layout shift */}
             <div className="absolute -bottom-6 left-0 w-full h-5">
               {status === "success" && <p className="text-[11px] text-[#D2A546] font-medium">Thank you for subscribing!</p>}
-              {status === "exists" && <p className="text-[11px] text-[#D2A546] font-medium">You're already on the list, Sleigh Queen.</p>}
+              {status === "exists" && <p className="text-[11px] text-[#D2A546] font-medium">You're already on the list, Sleigh Babe.</p>}
               {status === "error" && <p className="text-[11px] text-red-400 font-medium">Please enter a valid email address.</p>}
             </div>
           </div>
@@ -370,7 +364,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
       </div>
 
       <div className="border-t border-white/[0.08]">
@@ -380,7 +373,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-
     </footer>
   );
 }
