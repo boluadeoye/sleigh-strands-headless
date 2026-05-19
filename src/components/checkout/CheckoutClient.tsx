@@ -23,18 +23,20 @@ export default function CheckoutClient() {
   const [shippingLoading, setShippingLoading] = useState(false);
   const [userSession, setUserSession] = useState<any>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
-
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', state: 'LA' });
-  const [shippingData, setShippingData] = useState({ cost: 0, method_id: 'flat_rate', method_title: 'Standard Shipping' });
-  const [couponInput, setCouponInput] = useState("");
-  const [couponLoading, setCouponLoading] = useState(false);
-  const [couponError, setCouponError] = useState("");
+  
+  // MEMOIZATION: Prevents duplicate WooCommerce orders
+  const [stagedOrder, setStagedOrder] = useState<any>(null);
 
   useEffect(() => {
     setIsMounted(true);
     const savedState = localStorage.getItem('sleigh_shipping_state');
     if (savedState) setForm(prev => ({ ...prev, state: savedState }));
   }, []);
+
+  // INTEGRITY GUARD: Clear staged order if cart or state changes
+  useEffect(() => {
+    if (stagedOrder) setStagedOrder(null);
+  }, [cart, subtotal]);
 
   useEffect(() => {
     if (!isMounted) return;
@@ -79,15 +81,24 @@ export default function CheckoutClient() {
           body: JSON.stringify({ state: form.state }),
         });
         const data = await res.json();
-        if (res.ok) setShippingData(data);
+        if (res.ok) {
+          setShippingData(data);
+          setStagedOrder(null); // Clear memoized order if shipping cost changes
+        }
       } catch (err) {
-        setShippingData({ cost: 0, method_id: '', method_title: 'Error' });
+        setShippingData({ cost: 0, method_id: 'Error', method_title: 'Error' });
       } finally {
         setShippingLoading(false);
       }
     };
     fetchShipping();
   }, [form.state, profileLoading, isMounted]);
+
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', state: 'LA' });
+  const [shippingData, setShippingData] = useState({ cost: 0, method_id: 'flat_rate', method_title: 'Standard Shipping' });
+  const [couponInput, setCouponInput] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   const handleApplyCoupon = async () => {
     if (!couponInput || couponLoading) return;
@@ -103,6 +114,7 @@ export default function CheckoutClient() {
       if (res.ok) {
         setCoupon(data);
         setCouponInput("");
+        setStagedOrder(null); // Clear memoized order if discount changes
       } else {
         setCouponError(data.error);
       }
@@ -119,15 +131,53 @@ export default function CheckoutClient() {
   const amountToFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
   const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
+  const initializePayment = (orderData: any) => {
+    const pubKey = process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY;
+    (window as any).FlutterwaveCheckout({
+      public_key: pubKey,
+      tx_ref: `SLEIGH_ORD_${orderData.orderId}_${Date.now()}`,
+      amount: orderData.total,
+      currency: orderData.currency,
+      payment_options: "card, banktransfer, ussd",
+      show_conf_modal: false, // DEFINITIVE FIX: Suppresses generic browser alert
+      customer: {
+        email: form.email,
+        phone_number: form.phone,
+        name: form.name,
+      },
+      customizations: {
+        title: "Sleigh Strands",
+        description: `Payment for Order #${orderData.orderId}`,
+        logo: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png",
+      },
+      callback: function (paymentData: any) {
+        localStorage.removeItem('sleigh_shipping_state');
+        clearCart();
+        router.push('/success');
+      },
+      onclose: function() {
+        setLoading(false);
+        setShowCancelModal(true);
+      }
+    });
+  };
+
   const handleCheckout = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if ((!isFreeShipping && shippingData.cost === 0) || loading || cart.length === 0) return;
+    if (loading || cart.length === 0) return;
     
     const pubKey = process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY;
     const sdkReady = typeof (window as any).FlutterwaveCheckout === 'function';
 
     if (!pubKey || !sdkReady) {
       alert("Connection issue. Please refresh.");
+      return;
+    }
+
+    // RECOVERY PATH: Use existing order if available
+    if (stagedOrder) {
+      setLoading(true);
+      initializePayment(stagedOrder);
       return;
     }
 
@@ -150,32 +200,8 @@ export default function CheckoutClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order creation failed");
 
-      (window as any).FlutterwaveCheckout({
-        public_key: pubKey,
-        tx_ref: `SLEIGH_ORD_${data.orderId}_${Date.now()}`,
-        amount: data.total,
-        currency: data.currency,
-        payment_options: "card, banktransfer, ussd",
-        customer: {
-          email: form.email,
-          phone_number: form.phone,
-          name: form.name,
-        },
-        customizations: {
-          title: "Sleigh Strands",
-          description: `Payment for Order #${data.orderId}`,
-          logo: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png",
-        },
-        callback: function (paymentData: any) {
-          localStorage.removeItem('sleigh_shipping_state');
-          clearCart();
-          router.push('/success');
-        },
-        onclose: function() {
-          setLoading(false);
-          setShowCancelModal(true);
-        }
-      });
+      setStagedOrder(data); // Memoize for recovery
+      initializePayment(data);
 
     } catch (err: any) {
       alert(err.message || "Order failed.");
