@@ -24,7 +24,7 @@ const FAQ_DATA = [
   {
     id: 4,
     question: "Will the wig look like human hair?",
-    answer: "Our wigs are made from high-quality blend fibers, so they give a natural and polished appearance. However, they are not raw or human hair, and may not behave exactly the same, and that's completely normal."
+    answer: "Our wigs are made from high-quality blend fibers, so they give a natural and polished appearance. However, they are not raw or human hair, and may not behave exactly like human or raw hair, and that's completely normal."
   }
 ];
 
@@ -37,7 +37,7 @@ export default function FAQValueGrid() {
       <section className="bg-white py-24 overflow-hidden">
         <div className="max-w-[1440px] mx-auto px-6 md:px-14">
           <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-stretch">
-            
+
             {/* LEFT: FAQ ACCORDION */}
             <div className="w-full md:w-[55%] flex flex-col justify-center">
               {/* Badge: Machined Pill */}
@@ -54,8 +54,8 @@ export default function FAQValueGrid() {
 
               <div className="space-y-5">
                 {FAQ_DATA.map((faq) => (
-                  <div 
-                    key={faq.id} 
+                  <div
+                    key={faq.id}
                     onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
                     className="group bg-white border border-black/[0.03] p-6 md:p-8 rounded-[20px] cursor-pointer transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.06)]"
                   >
@@ -63,15 +63,13 @@ export default function FAQValueGrid() {
                       <span className="text-base md:text-xl font-montserrat italic font-medium text-[#0C0608]/80 leading-tight">
                         {faq.question}
                       </span>
-                      {/* Plus Button: Machined Square */}
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 ${
                         openId === faq.id ? 'bg-[#3D1218] text-white rotate-180' : 'bg-[#F4F4F4] text-[#0C0608]/30'
                       }`}>
                         {openId === faq.id ? <Minus size={18} strokeWidth={2.5} /> : <Plus size={18} strokeWidth={2.5} />}
                       </div>
                     </div>
-                    
-                    {/* Answer: Smooth Reveal */}
+
                     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
                       openId === faq.id ? 'max-h-40 mt-6 opacity-100' : 'max-h-0 opacity-0'
                     }`}>
@@ -112,17 +110,20 @@ export default function FAQValueGrid() {
                   <strong className="text-white font-semibold">Signature Luster.</strong> Experience the seamless movement and nourishing glow of hair that's designed to turn heads.
                 </p>
               </div>
-              {/* Subtle background accent */}
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
             </div>
 
-            {/* White Block */}
+            {/* White Block: SURGICAL EDITORIAL UPDATE */}
             <div className="bg-white p-10 md:p-16 rounded-[32px] text-[#0C0608] flex flex-col justify-between min-h-[380px] shadow-xl border border-black/[0.02]">
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter mb-8">
                 Unrivaled<br/>Authenticity
               </h3>
               <p className="text-sm md:text-base text-[#0C0608]/60 leading-relaxed max-w-sm">
-                <strong className="text-[#0C0608] font-semibold">Proven Performance.</strong> Curation without compromise. We deliver the exact density and length you demand.
+                We believe in getting it right the first time.
+                <br /><br />
+                From how our wigs are styled to how they are delivered, every detail reflects accuracy, honesty, and intention.
+                <br /><br />
+                Because your satisfaction matters.
               </p>
             </div>
           </div>
