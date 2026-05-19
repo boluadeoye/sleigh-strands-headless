@@ -71,11 +71,11 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent -z-10 hidden md:block" />
         )}
 
-        <div className="max-w-[1440px] mx-auto flex items-center">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-x-8 md:gap-x-0">
           
-          {/* ZONE 1: LOGO (Left Aligned, flex-1) */}
+          {/* ZONE 1: LOGO (Nudged left, flex-1) */}
           <div className="flex-1 flex items-center justify-start">
-            <Link href="/" className="relative block w-full h-20 md:h-24 lg:h-28 max-w-[50vw] md:max-w-[280px] lg:max-w-[380px] transition-all duration-500">
+            <Link href="/" className="relative block w-full h-20 md:h-24 lg:h-28 max-w-[42vw] md:max-w-[280px] lg:max-w-[380px] transition-all duration-500">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
@@ -98,8 +98,8 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             </div>
           </div>
 
-          {/* ZONE 3: ACTIONS (Right Aligned, flex-1) */}
-          <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
+          {/* ZONE 3: ACTIONS (Priority space, flex-none on mobile) */}
+          <div className="flex-none md:flex-1 flex items-center justify-end gap-2 md:gap-4">
             <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center`}>
               <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
             </button>
