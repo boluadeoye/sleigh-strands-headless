@@ -85,25 +85,25 @@ export default function FAQValueGrid() {
       <section className="bg-[#FDF8F0] py-24">
         <div className="max-w-[1440px] mx-auto px-6 md:px-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {/* Burgundy Block: RECTIFIED SPACING */}
-            <div className="bg-[#3D1218] p-10 md:p-16 rounded-[32px] text-white flex flex-col justify-start min-h-[480px] md:min-h-[520px] shadow-xl relative overflow-hidden">
+            {/* Burgundy Block: HEIGHT CORRECTED */}
+            <div className="bg-[#3D1218] p-10 md:p-16 rounded-[32px] text-white flex flex-col justify-start shadow-xl relative overflow-hidden h-full">
               <div className="relative z-10">
                 <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter">
                   Trusted by 500k+<br/>Women Worldwide
                 </h3>
-                <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-sm mt-16 md:mt-24">
+                <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-sm mt-8 md:mt-12">
                   <strong className="text-white font-semibold">Signature Luster.</strong> Experience the seamless movement and nourishing glow of hair that's designed to turn heads.
                 </p>
               </div>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
             </div>
 
-            {/* White Block: RECTIFIED SPACING */}
-            <div className="bg-white p-10 md:p-16 rounded-[32px] text-[#0C0608] flex flex-col justify-start min-h-[480px] md:min-h-[520px] shadow-xl border border-black/[0.02]">
+            {/* White Block: HEIGHT CORRECTED */}
+            <div className="bg-white p-10 md:p-16 rounded-[32px] text-[#0C0608] flex flex-col justify-start shadow-xl border border-black/[0.02] h-full">
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter">
                 Unrivaled<br/>Authenticity
               </h3>
-              <p className="text-sm md:text-base text-[#0C0608]/60 leading-relaxed max-w-sm mt-16 md:mt-24">
+              <p className="text-sm md:text-base text-[#0C0608]/60 leading-relaxed max-w-sm mt-8 md:mt-12">
                 We believe in getting it right the first time.
                 <br /><br />
                 From how our wigs are styled to how they are delivered, every detail reflects accuracy, honesty, and intention.
