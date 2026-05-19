@@ -66,15 +66,15 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
 
   return (
     <>
-      <nav className={`${position} w-full z-[100] px-6 md:px-12 transition-all duration-500 ${navBg} ${isSolid ? 'py-4' : 'pb-8'} subpixel-antialiased`}>
+      <nav className={`${position} w-full z-[100] px-4 md:px-12 transition-all duration-500 ${navBg} ${isSolid ? 'py-4' : 'pb-8'} subpixel-antialiased`}>
         {!isSolid && (
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent -z-10 hidden md:block" />
         )}
 
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
-          {/* LOGO: Magnified for vivid presence with spatial protection */}
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
+          {/* LOGO: Nudged left with balanced dimensions */}
           <div className="flex items-center justify-start flex-1 min-w-0">
-            <Link href="/" className="relative block w-64 h-20 max-w-[60vw] md:w-80 md:h-24 lg:w-[450px] lg:h-[120px] transition-all duration-500 flex-shrink-0">
+            <Link href="/" className="relative block w-48 h-12 max-w-[55vw] md:w-80 md:h-24 lg:w-[450px] lg:h-[120px] transition-all duration-500 flex-shrink-0">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
@@ -96,8 +96,8 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             </div>
           </div>
 
-          {/* ICONS: Locked with flex-shrink-0 to prevent squashing */}
-          <div className="flex items-center justify-end gap-2 md:gap-4 flex-shrink-0">
+          {/* ICONS: Tightened gap to maximize breathing room for logo */}
+          <div className="flex items-center justify-end gap-1.5 md:gap-4 flex-shrink-0">
             <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center flex-shrink-0`}>
               <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
             </button>
