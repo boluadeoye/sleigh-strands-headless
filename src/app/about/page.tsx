@@ -10,12 +10,13 @@ export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('brand');
   const founderImg = "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256282/blog_assets/nmgtkfnbogjddzwpdjza.jpg";
   const patternImg = "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256302/blog_assets/qz5g1o0uix1pxdf5683i.png";
+  const desktopAsset = "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777102560/blog_assets/satt0gqmz9vbix5sqg6z.png";
 
   return (
     <main className="min-h-screen bg-cream">
       <Navbar variant="solid" />
 
-      {/* 1. HERO: Visual Centering with Navbar Clearance */}
+      {/* 1. HERO */}
       <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
@@ -38,7 +39,6 @@ export default function AboutPage() {
       <section className="relative z-20 -mt-12 md:-mt-20 max-w-[1440px] mx-auto px-4 md:px-12 pb-32">
         <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] shadow-2xl p-6 md:p-16 lg:p-24">
           
-          {/* Tab Navigation: Rigid Grid for Mobile Fidelity */}
           <div className="grid grid-cols-2 md:flex md:w-max gap-3 md:gap-4 mb-16 md:mb-24">
             <button 
               onClick={() => setActiveTab('brand')}
@@ -82,9 +82,6 @@ export default function AboutPage() {
                         </li>
                       ))}
                     </ul>
-                    <p className="text-ink/70 text-base md:text-lg leading-relaxed max-w-4xl">
-                      Once properly worn and maintained, they give a polished look that blends seamlessly, so you can step out with confidence every time
-                    </p>
                   </div>
                 </div>
 
@@ -116,38 +113,48 @@ export default function AboutPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-ink/70 text-base md:text-lg leading-relaxed max-w-4xl">
-                    Whether you&apos;re trying blend wigs for the first time or you&apos;ve had mixed experiences before, Sleigh Strands is here to give you a better, more reliable experience
-                  </p>
                 </div>
 
-                {/* FOUNDER NOTE: Figma 1:1 with Pattern */}
-                <div 
-                  className="relative bg-burgundy rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden pt-12 md:pt-20 px-8 md:px-20 pb-32 md:pb-40 shadow-2xl"
-                >
-                  <div className="flex flex-col md:flex-row gap-12 items-start relative z-10">
-                    <div className="relative w-48 h-60 md:w-64 md:h-80 rounded-2xl overflow-hidden shrink-0 border-2 border-white/10 shadow-xl">
-                      <Image src={founderImg} alt="Founder" fill className="object-cover" />
-                    </div>
-                    <div className="text-white space-y-6 max-w-2xl">
-                      <h3 className="text-4xl md:text-6xl font-serif-italic leading-tight">A Note From the Founder</h3>
-                      <div className="space-y-6 text-sm md:text-lg font-light opacity-90 leading-relaxed">
-                        <p>Sleigh Strands was created with one goal, to make looking good feel easy, accessible, and stress-free.</p>
-                        <p>Wearing blend wigs doesn&apos;t make you cheap, tacky, or less than. It simply means you&apos;ve found a smarter way to show up as your best self.</p>
-                      </div>
-                      <p className="text-xl md:text-2xl font-serif-italic text-gold">Your hair, your choice. Always.</p>
+                {/* FOUNDER NOTE: HYBRID IMPLEMENTATION */}
+                <div className="w-full">
+                  {/* DESKTOP: Restored Asset */}
+                  <div className="hidden md:block">
+                    <div className="relative w-full aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl">
+                      <Image 
+                        src={desktopAsset} 
+                        alt="Founder's Note" fill className="object-contain"
+                      />
                     </div>
                   </div>
-                  {/* The Gold Pattern Overlay */}
+                  
+                  {/* MOBILE: Custom Design Reconstruction */}
                   <div 
-                    className="absolute bottom-0 left-0 right-0 h-24 md:h-32 opacity-60 pointer-events-none"
-                    style={{ 
-                      backgroundImage: `url(${patternImg})`,
-                      backgroundRepeat: 'repeat-x',
-                      backgroundPosition: 'bottom',
-                      backgroundSize: 'auto 100%'
-                    }}
-                  />
+                    className="md:hidden relative bg-burgundy rounded-[2.5rem] overflow-hidden pt-12 px-8 pb-32 shadow-2xl"
+                  >
+                    <div className="flex flex-col gap-8 relative z-10">
+                      <div className="relative w-48 h-60 rounded-2xl overflow-hidden border-2 border-white/10 shadow-xl">
+                        <Image src={founderImg} alt="Founder" fill className="object-cover" />
+                      </div>
+                      <div className="text-white space-y-6">
+                        <h3 className="text-4xl font-sans font-bold italic leading-tight">A Note From the Founder</h3>
+                        <div className="space-y-6 text-sm font-light opacity-90 leading-relaxed">
+                          <p>Sleigh Strands was created with one goal, to make looking good feel easy, accessible, and stress-free.</p>
+                          <p>Wearing blend wigs doesn&apos;t make you cheap, tacky, or less than. It simply means you&apos;ve found a smarter way to show up as your best self.</p>
+                        </div>
+                        <p className="text-lg italic text-gold">Your hair, your choice. Always.</p>
+                      </div>
+                    </div>
+                    {/* Pattern Overlay */}
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 h-20 opacity-60 pointer-events-none"
+                      style={{ 
+                        backgroundImage: `url(${patternImg})`,
+                        backgroundRepeat: 'repeat-x',
+                        backgroundPosition: 'bottom',
+                        backgroundSize: 'auto 100%'
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Section: Our Promise */}
@@ -180,7 +187,7 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Final Sign-off Hierarchy */}
+                {/* Final Sign-off */}
                 <div className="text-center py-20 space-y-10">
                   <div className="flex justify-center"><GoldStar className="w-12 h-12" /></div>
                   <h2 className="text-3xl md:text-6xl font-sans font-bold text-burgundy tracking-tighter leading-tight max-w-4xl mx-auto">
