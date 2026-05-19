@@ -44,45 +44,29 @@ const TRUST_POINTS = [
 
 export default function TrustBar() {
   return (
-    <section className="bg-[#FDF8F0] border-y border-[#3D1218]/5 py-4 md:py-6 overflow-hidden relative">
+    <section className="bg-[#FDF8F0] border-y border-[#3D1218]/5 py-4 md:py-6 overflow-hidden relative group">
       <style jsx global>{`
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
         }
         .animate-marquee {
           display: flex;
           width: max-content;
-          animation: marquee 30s linear infinite;
+          animation: marquee 40s linear infinite;
+          will-change: transform;
         }
       `}</style>
 
-      {/* MOBILE: CONTINUOUS SLIDING MARQUEE */}
-      <div className="md:hidden flex overflow-hidden">
-        <div className="animate-marquee flex items-center">
-          {/* Duplicate content for seamless loop */}
-          {[...TRUST_POINTS, ...TRUST_POINTS].map((point, i) => (
-            <div key={i} className="flex items-center gap-3 px-8 whitespace-nowrap">
+      <div className="flex overflow-hidden">
+        <div className="animate-marquee flex items-center group-hover:[animation-play-state:paused]">
+          {/* Quadruple content for seamless loop on ultra-wide PC screens */}
+          {[...TRUST_POINTS, ...TRUST_POINTS, ...TRUST_POINTS, ...TRUST_POINTS].map((point, i) => (
+            <div key={i} className="flex items-center gap-3 px-10 md:px-16 whitespace-nowrap subpixel-antialiased">
               <div className="text-[#3D1218]/60">
                 <point.icon />
               </div>
-              <span className="text-[#3D1218] font-montserrat font-medium text-[10px] tracking-[0.15em] uppercase">
-                {point.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* DESKTOP: FIXED COORDINATE ROW */}
-      <div className="hidden md:block max-w-7xl mx-auto px-14">
-        <div className="flex justify-between items-center w-full">
-          {TRUST_POINTS.map((point, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="text-[#3D1218]/60">
-                <point.icon />
-              </div>
-              <span className="text-[#3D1218] font-montserrat font-medium text-[10px] lg:text-[11px] tracking-[0.15em] uppercase">
+              <span className="text-[#3D1218] font-sans font-medium text-[10px] md:text-[11px] tracking-[0.15em] uppercase">
                 {point.label}
               </span>
             </div>
