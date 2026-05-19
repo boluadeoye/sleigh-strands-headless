@@ -17,7 +17,6 @@ export default function CheckoutClient() {
   const { cart, subtotal, updateQuantity, setQuantity, removeFromCart, coupon, setCoupon, discountTotal, clearCart } = useCart();
   const router = useRouter();
 
-  // 1. HOISTED STATE DECLARATIONS (Top of component to prevent TDZ errors)
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -31,19 +30,16 @@ export default function CheckoutClient() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponError, setCouponError] = useState("");
 
-  // 2. INITIALIZATION EFFECTS
   useEffect(() => {
     setIsMounted(true);
     const savedState = localStorage.getItem('sleigh_shipping_state');
     if (savedState) setForm(prev => ({ ...prev, state: savedState }));
   }, []);
 
-  // 3. INTEGRITY EFFECTS
   useEffect(() => {
     if (stagedOrder) setStagedOrder(null);
   }, [cart, subtotal]);
 
-  // 4. DATA FETCHING EFFECTS
   useEffect(() => {
     if (!isMounted) return;
     const savedUser = localStorage.getItem('sleigh_user');
@@ -100,7 +96,6 @@ export default function CheckoutClient() {
     fetchShipping();
   }, [form.state, profileLoading, isMounted]);
 
-  // 5. LOGIC HELPERS
   const handleApplyCoupon = async () => {
     if (!couponInput || couponLoading) return;
     setCouponLoading(true);
@@ -209,6 +204,23 @@ export default function CheckoutClient() {
     }
   };
 
+  // DEFINITIVE FIX: Handle actual cancellation
+  const handleCancelOrder = async () => {
+    setShowCancelModal(false);
+    if (stagedOrder?.orderId) {
+      try {
+        await fetch('/api/checkout/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: stagedOrder.orderId })
+        });
+        setStagedOrder(null); // Clear so next attempt creates a fresh order
+      } catch (err) {
+        console.error("Failed to cancel order", err);
+      }
+    }
+  };
+
   if (!isMounted || profileLoading) {
     return (
       <div className="max-w-6xl mx-auto px-5 md:px-6 min-h-[60vh] flex flex-col items-center justify-center gap-4">
@@ -223,7 +235,7 @@ export default function CheckoutClient() {
       <CancelModal 
         isOpen={showCancelModal} 
         onClose={() => { setShowCancelModal(false); handleCheckout(); }} 
-        onConfirm={() => { setShowCancelModal(false); }} 
+        onConfirm={handleCancelOrder} 
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-10 md:gap-20">

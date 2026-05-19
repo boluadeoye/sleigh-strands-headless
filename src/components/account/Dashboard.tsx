@@ -25,7 +25,7 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [orderFilter, setOrderFilter] = useState('All');
-  const [filterDate, setFilterDate] = useState(''); // NEW: Date filter state
+  const [filterDate, setFilterDate] = useState('');
   const [updateStatus, setUpdateStatus] = useState<{type: 'success' | 'error', msg: string} | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [showPassword, setShowPassword] = useState(false);
@@ -254,13 +254,13 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
           <div className="space-y-8">
             <div className="flex flex-wrap items-center gap-3">
               <Sliders size={16} className="text-[#8B2632]" />
-              {['All', 'Processing', 'Shipped', 'Delivered', 'Canceled'].map((f) => (
+              {/* DEFINITIVE FIX: Corrected spelling to 'Cancelled' to match WooCommerce */}
+              {['All', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((f) => (
                 <button key={f} onClick={() => setOrderFilter(f)} className={`px-3 py-1.5 rounded-md text-[10px] transition-all ${orderFilter === f ? 'bg-[#FF6B35] text-white' : 'bg-white text-black/60 hover:text-black border border-black/5'}`}>
                   {f}
                 </button>
               ))}
               
-              {/* CALENDAR FILTER UI */}
               <div className="ml-auto flex items-center gap-2">
                 <div className="relative">
                   <button className={`flex items-center gap-2 px-3 py-1.5 border rounded-md text-[10px] transition-all ${filterDate ? 'bg-[#8B2632] text-white border-[#8B2632]' : 'bg-white text-black/60 border-black/10 hover:bg-black/5'}`}>
@@ -556,8 +556,15 @@ export default function Dashboard({ user, onLogout }: DashboardProps) {
                       <span>₦{parseFloat(fee.total).toLocaleString()}</span>
                     </div>
                   ))}
+                  
+                  {/* DEFINITIVE FIX: Dynamic Payment Status Indicator */}
                   <div className="flex justify-between items-center pt-3 mt-3 border-t border-black/5">
-                    <span className="text-base font-bold text-black/80">Total Paid</span>
+                    <div className="flex flex-col">
+                      <span className="text-base font-bold text-black/80">Order Total</span>
+                      <span className={`text-[9px] font-bold uppercase tracking-widest mt-1 ${['processing', 'completed', 'shipped', 'delivered'].includes(selectedOrder.status.toLowerCase()) ? 'text-green-600' : 'text-red-500'}`}>
+                        {['processing', 'completed', 'shipped', 'delivered'].includes(selectedOrder.status.toLowerCase()) ? 'Payment Received ✅' : 'No Payment Received ❌'}
+                      </span>
+                    </div>
                     <span className="text-xl font-bold text-[#8B2632]">₦{parseFloat(selectedOrder.total).toLocaleString()}</span>
                   </div>
                 </div>
