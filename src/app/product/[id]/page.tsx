@@ -31,7 +31,7 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
 
         <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start mb-32">
           <div className="relative">
-            <ProductGallery images={product.images} name={product.name} />
+            <ProductGallery images={product.images} name={product.name} productId={product.id} />
           </div>
 
           <div className="pt-4">
@@ -40,7 +40,6 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
               Categories: <span className="text-black/40 font-medium">{product.categories?.[0]?.name || 'Luxury Hair'}</span>
             </div>
             
-            {/* EDITORIAL CURE APPLIED TO SHORT DESCRIPTION */}
             <div className="sleigh-editorial mb-12 max-w-md">
                <div dangerouslySetInnerHTML={{ __html: product.short_description || product.description }} />
             </div>
