@@ -210,3 +210,17 @@
   font-family: "Montserrat", sans-serif !important;
   font-style: normal !important;
 }
+
+/* REFINED EDITORIAL NOTE: Elegant Proportions */
+.sleigh-editorial em, 
+.sleigh-editorial i,
+.sleigh-editorial em *,
+.sleigh-editorial i * {
+  font-family: "Cormorant Garamond", serif !important;
+  font-size: 0.9rem !important; /* Reduced from 1.15rem */
+  line-height: 1.4 !important; /* Compressed for elegance */
+  color: rgba(12, 6, 8, 0.6) !important; /* Softened for hierarchy */
+  font-style: italic !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
