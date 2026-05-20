@@ -120,3 +120,49 @@
   color: var(--color-ink) !important;
   opacity: 0.8 !important;
 }
+
+/* SLEIGH EDITORIAL: High-Fashion WordPress Content Transformation */
+.sleigh-editorial {
+  color: rgba(12, 6, 8, 0.8) !important;
+  line-height: 1.8 !important;
+  font-size: 0.875rem !important;
+}
+
+.sleigh-editorial p {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Transform Bold Labels into Burgundy Headers */
+.sleigh-editorial strong, 
+.sleigh-editorial b {
+  color: #8B2632 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.2em !important;
+  font-size: 0.75rem !important;
+  display: inline-block !important;
+  margin-right: 0.5rem !important;
+}
+
+/* Force Serif Italic for Notes and Accents */
+.sleigh-editorial em, 
+.sleigh-editorial i {
+  font-family: "Cormorant Garamond", serif !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  color: rgba(12, 6, 8, 0.6) !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* Clean up list styling within descriptions */
+.sleigh-editorial ul {
+  list-style-type: none !important;
+  padding-left: 0 !important;
+  margin-bottom: 2rem !important;
+}
+
+.sleigh-editorial li {
+  margin-bottom: 0.5rem !important;
+  position: relative !important;
+}

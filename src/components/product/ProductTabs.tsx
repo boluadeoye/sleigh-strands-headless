@@ -6,7 +6,6 @@ import ReviewList from './ReviewList';
 export default function ProductTabs({ product, reviews }: { product: any, reviews: any[] }) {
   const [activeTab, setActiveTab] = useState<'about' | 'reviews'>('about');
 
-  // Logic to build dynamic specifications from WooCommerce Data
   const specs = [];
   if (product.weight && product.weight !== "0" && product.weight !== 0) {
     specs.push({ label: 'Weight', value: `${product.weight} kg` });
@@ -23,7 +22,6 @@ export default function ProductTabs({ product, reviews }: { product: any, review
 
   return (
     <div className="mb-16">
-      {/* TAB HEADERS */}
       <div className="flex gap-12 border-b border-black/5 mb-12 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab('about')}
@@ -43,19 +41,16 @@ export default function ProductTabs({ product, reviews }: { product: any, review
         </button>
       </div>
 
-      {/* TAB CONTENT */}
       <div className="grid lg:grid-cols-2 gap-12 md:gap-20">
         {activeTab === 'about' ? (
           <>
             <div className="max-w-2xl space-y-12">
-              {/* 1. REAL PRODUCT DESCRIPTION */}
               {product.description && (
-                <div className="prose prose-sm max-w-none text-black/70 leading-relaxed">
+                <div className="sleigh-editorial">
                   <div dangerouslySetInnerHTML={{ __html: product.description }} />
                 </div>
               )}
 
-              {/* 2. DYNAMIC SPECIFICATIONS */}
               {specs.length > 0 && (
                 <div>
                   <h3 className="text-2xl font-sans font-bold text-black/80 mb-8 tracking-tight">Specifications</h3>
@@ -72,7 +67,6 @@ export default function ProductTabs({ product, reviews }: { product: any, review
               )}
             </div>
 
-            {/* 3. BRAND GUARANTEE */}
             <div className="bg-[#F5E6E8]/30 p-8 md:p-12 rounded-[2.5rem] border border-[#8B2632]/5 h-fit">
                <h4 className="text-lg font-bold text-[#8B2632] mb-4 uppercase tracking-widest">Sleigh Guarantee</h4>
                <p className="text-sm text-black/60 leading-relaxed">
