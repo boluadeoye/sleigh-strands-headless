@@ -11,15 +11,15 @@ export default function FinalCTA() {
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row items-stretch gap-12 lg:gap-20">
 
-          {/* Left: Image Block */}
+          {/* Left: Image Block - Updated with Double Model Asset & Top Anchoring */}
           <div className="w-full md:w-[45%]">
             <div className="relative aspect-[1/1.25] w-full rounded-[4rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] border border-black/5">
               <Image
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg"
-                alt="Sleigh Strands Expert"
+                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779270387/blog_assets/t4dv8k0d6cu8lwzmd7ex.jpg"
+                alt="Sleigh Strands Elite Textures"
                 fill
                 priority
-                className="object-cover"
+                className="object-cover object-[center_20%]"
               />
             </div>
           </div>
@@ -41,10 +41,10 @@ export default function FinalCTA() {
               <Link href="/shop" className="bg-burgundy text-white px-10 py-4.5 rounded-2xl text-[11px] font-bold uppercase tracking-[0.2em] text-center hover:bg-ink transition-all shadow-xl active:scale-95">
                 Shop From Collection
               </Link>
-              <a 
-                href={instagramLink} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={instagramLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-[#F5E6E8] text-burgundy px-10 py-4.5 rounded-2xl text-[11px] font-bold uppercase tracking-[0.2em] text-center hover:bg-[#EDD3D7] transition-all active:scale-95"
               >
                 Get An Expert Guide
