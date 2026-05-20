@@ -190,3 +190,23 @@
   text-transform: none !important;
   letter-spacing: normal !important;
 }
+
+/* NUCLEAR SERIF OVERRIDE: Defeating the Universal Lock for Editorial Notes */
+.sleigh-editorial em, 
+.sleigh-editorial i,
+.sleigh-editorial em *,
+.sleigh-editorial i * {
+  font-family: "Cormorant Garamond", serif !important;
+  font-style: italic !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  color: rgba(12, 6, 8, 0.7) !important;
+  font-size: 1.15rem !important;
+}
+
+/* Ensure the label "NOTE:" stays Montserrat while the rest is Serif */
+.sleigh-editorial strong, 
+.sleigh-editorial b {
+  font-family: "Montserrat", sans-serif !important;
+  font-style: normal !important;
+}
