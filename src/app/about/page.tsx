@@ -16,7 +16,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-cream">
       <Navbar variant="solid" />
 
-      {/* 1. HERO: Visual Centering with Navbar Clearance */}
+      {/* 1. HERO */}
       <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
@@ -39,7 +39,7 @@ export default function AboutPage() {
       <section className="relative z-20 -mt-12 md:-mt-20 max-w-[1440px] mx-auto px-4 md:px-12 pb-32">
         <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] shadow-2xl p-6 md:p-16 lg:p-24">
           
-          {/* Tab Navigation: Rigid Grid for Mobile Fidelity */}
+          {/* Tab Navigation */}
           <div className="grid grid-cols-2 md:flex md:w-max gap-3 md:gap-4 mb-16 md:mb-24">
             <button 
               onClick={() => setActiveTab('brand')}
@@ -58,7 +58,7 @@ export default function AboutPage() {
           <AnimatePresence mode="wait">
             {activeTab === 'brand' ? (
               <motion.div 
-                key="brand" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                key="brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="space-y-20 md:space-y-28"
               >
                 {/* Intro Narrative */}
@@ -86,7 +86,37 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* FOUNDER NOTE: HYBRID IMPLEMENTATION */}
+                {/* Section: Smart Beauty */}
+                <div className="space-y-10">
+                  <div className="flex items-center gap-6">
+                    <GoldStar className="w-8 h-8 md:w-10 md:h-10" />
+                    <h2 className="text-3xl md:text-5xl font-sans font-bold text-ink tracking-tighter">Smart Beauty, No Pressure</h2>
+                  </div>
+                  <div className="max-w-4xl space-y-8 text-ink/70 text-base md:text-lg leading-relaxed">
+                    <p>We&apos;re not here to compete with raw bundles or luxury human hair, and we&apos;re honest about that.</p>
+                    <p>Instead, we offer a smarter alternative: beautiful styles that allow you to look good consistently without breaking the bank.</p>
+                    <p className="font-bold text-ink text-lg md:text-xl">Because looking good shouldn&apos;t feel like a financial burden.</p>
+                  </div>
+                </div>
+
+                {/* Section: Why Try */}
+                <div className="space-y-10">
+                  <SBadge text="WHY YOU SHOULD TRY SLEIGH STRANDS" />
+                  <ul className="space-y-6">
+                    {[
+                      'Instantly transforms your look',
+                      'Perfect for everyday wear or quick switches',
+                      'Saves you time on styling',
+                      'Gives you variety without long-term commitment'
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-4 text-base md:text-xl font-medium text-ink/80">
+                        <GoldStar className="w-3.5 h-3.5 md:w-4 md:h-4" /> {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* FOUNDER NOTE: HYBRID */}
                 <div className="w-full">
                   <div className="hidden md:block">
                     <div className="relative w-full aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl">
@@ -114,7 +144,16 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Section: Our Collections */}
+                {/* Section: Our Promise */}
+                <div className="space-y-10">
+                  <SBadge text="OUR PROMISE" />
+                  <div className="max-w-4xl space-y-6 text-ink/70 text-base md:text-lg leading-relaxed">
+                    <p>At Sleigh Strands, what you see is what you get.</p>
+                    <p>Our wigs are accurately represented and pre-styled to match the standard displayed. We focus on delivering consistency, so you can shop with confidence every time.</p>
+                  </div>
+                </div>
+
+                {/* Section: Collections */}
                 <div className="space-y-12">
                   <SBadge text="OUR COLLECTIONS" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
@@ -133,48 +172,40 @@ export default function AboutPage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Final Sign-off */}
+                <div className="text-center py-20 space-y-10">
+                  <div className="flex justify-center"><GoldStar className="w-12 h-12" /></div>
+                  <h2 className="text-3xl md:text-6xl font-sans font-bold text-burgundy tracking-tighter leading-tight max-w-4xl mx-auto">
+                    This is for the girls who want to look good without overthinking it.
+                  </h2>
+                  <div className="space-y-2 text-ink/60 text-lg md:text-xl font-light">
+                    <p>Welcome to Sleigh Strands.</p>
+                    <p>Here&apos;s to sleighing your strands</p>
+                  </div>
+                </div>
               </motion.div>
             ) : (
               <motion.div 
                 key="ceo" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="space-y-16 md:space-y-24"
               >
-                {/* CEO EDITORIAL SECTION */}
                 <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start">
-                  {/* CEO Portrait */}
                   <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl border border-burgundy/5">
-                    <Image 
-                      src={founderImg} 
-                      alt="Promise Oyeladun" 
-                      fill 
-                      className="object-cover"
-                      priority
-                    />
+                    <Image src={founderImg} alt="Promise Oyeladun" fill className="object-cover" priority />
                   </div>
-
-                  {/* CEO Biography */}
                   <div className="space-y-10">
                     <div className="space-y-4">
-                      <h2 className="text-3xl md:text-5xl font-serif-italic text-burgundy leading-tight">
-                        The Visionary Behind the Brand
-                      </h2>
-                      <h3 className="text-xl md:text-2xl font-sans font-bold tracking-[0.2em] text-ink uppercase">
-                        Promise Oyeladun
-                      </h3>
+                      <h2 className="text-3xl md:text-5xl font-serif-italic text-burgundy leading-tight">The Visionary Behind the Brand</h2>
+                      <h3 className="text-xl md:text-2xl font-sans font-bold tracking-[0.2em] text-ink uppercase">Promise Oyeladun</h3>
                     </div>
-
                     <div className="space-y-6 text-ink/80 text-base md:text-lg leading-relaxed font-light">
                       <p>Promise Oyeladun is the Creative Director and Founder of Sleigh Strands, a brand built on the belief that every woman deserves to look confident, stylish, and effortlessly beautiful without having to spend a fortune.</p>
-                      
                       <p>Prior to Sleigh Strands, Promise successfully built and managed Styledynastyng - a beauty & fashion brand that served thousands of satisfied customers through the sale of different fashion & beauty products, and personal shopping services.</p>
-                      
                       <p>Her experience in running a customer-focused fashion business has helped her understand what women truly want: quality, style, and affordability, which inspired the creation of Sleigh Strands.</p>
-                      
                       <p>What started as a simple idea quickly grew into a brand with a clear mission: to provide high-quality wigs that are stylish, natural-looking, and accessible to every woman.</p>
-                      
                       <p>For Promise, Sleigh Strands is not just about hair. It’s about confidence, self-expression and helping ladies show up as their best selves wherever they go.</p>
                     </div>
-
                     <div className="pt-8 border-t border-burgundy/10">
                       <p className="font-serif-italic text-2xl text-burgundy">Promise Oyeladun</p>
                       <p className="text-xs font-bold uppercase tracking-widest text-gold mt-1">Founder & Creative Director</p>
