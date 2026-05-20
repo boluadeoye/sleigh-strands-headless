@@ -166,3 +166,27 @@
   margin-bottom: 0.5rem !important;
   position: relative !important;
 }
+
+/* AGGRESSIVE EDITORIAL OVERRIDE */
+.sleigh-editorial * {
+  line-height: 1.8 !important;
+}
+
+.sleigh-editorial strong, 
+.sleigh-editorial b {
+  color: #8B2632 !important;
+  font-family: "Montserrat", sans-serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.2em !important;
+  font-size: 0.75rem !important;
+  display: inline-block !important;
+}
+
+.sleigh-editorial em, 
+.sleigh-editorial i {
+  font-family: "Cormorant Garamond", serif !important;
+  font-style: italic !important;
+  color: rgba(12, 6, 8, 0.6) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}

@@ -11,7 +11,6 @@ import ProductTabs from '@/components/product/ProductTabs';
 export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
 
-  // Parallel Fetch for speed
   const [product, reviews] = await Promise.all([
     getSingleProduct(id),
     getProductReviews(id)
@@ -36,16 +35,20 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
           </div>
 
           <div className="pt-4">
-            <h1 className="text-4xl md:text-5xl font-sans font-bold text-black mb-3 tracking-tight">{product.name}</h1>
+            <h1 className="text-4xl md:text-5xl font-sans font-bold text-black mb-3 tracking-tight uppercase">{product.name}</h1>
             <div className="text-[11px] uppercase tracking-[0.3em] text-[#8B2632] mb-10 font-bold">
               Categories: <span className="text-black/40 font-medium">{product.categories?.[0]?.name || 'Luxury Hair'}</span>
             </div>
-            <div className="text-black/60 text-sm leading-relaxed mb-12 max-w-md font-light" dangerouslySetInnerHTML={{ __html: product.short_description || product.description }} />
+            
+            {/* EDITORIAL CURE APPLIED TO SHORT DESCRIPTION */}
+            <div className="sleigh-editorial mb-12 max-w-md">
+               <div dangerouslySetInnerHTML={{ __html: product.short_description || product.description }} />
+            </div>
+
             <AddToCart product={product} />
           </div>
         </div>
 
-        {/* INTELLIGENT TABS: Handles About vs Approved Reviews */}
         <ProductTabs product={product} reviews={reviews} />
       </div>
 
