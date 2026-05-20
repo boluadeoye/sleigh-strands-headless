@@ -12,29 +12,28 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
   const { wishlistIds, toggleWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [imageLoaded, setImageLoaded] = useState(false);
-  
+
   const isOutOfStock = product.stock_status === 'outofstock';
   const isWishlisted = wishlistIds.includes(product.id);
 
   const hasRating = product.rating_count > 0;
   const displayRating = hasRating ? Number(product.average_rating).toFixed(1) : null;
 
-  // STAGGERED REVEAL PHYSICS
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.6, 
-        delay: (index % 4) * 0.1, 
-        ease: [0.215, 0.61, 0.355, 1] 
-      } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        delay: (index % 4) * 0.1,
+        ease: [0.215, 0.61, 0.355, 1]
+      }
     }
   };
 
   return (
-    <motion.div 
+    <motion.div
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
@@ -43,9 +42,9 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
     >
       <div className="relative aspect-[4/5] rounded-[10px] overflow-hidden mb-3 sm:mb-4 bg-[#F9F9F9]">
         <Link href={`/product/${product.id}`}>
-          {/* BOUTIQUE ZOOM ENGINE */}
-          <motion.div 
-            whileHover={{ scale: 1.08 }} 
+          {/* BOUTIQUE ZOOM ENGINE: Anchored to Top-Center */}
+          <motion.div
+            whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative w-full h-full"
           >
@@ -53,14 +52,14 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
               src={product.images?.[0]?.src || "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776170457/blog_assets/av9grfitavzjltpmsopn.png"}
               alt={product.name}
               fill
-              className={`object-cover transition-opacity duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover object-[center_15%] transition-opacity duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImageLoaded(true)}
               sizes="(max-width: 768px) 50vw, 33vw"
             />
           </motion.div>
         </Link>
-
-        <button 
+        
+        <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
           className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] hover:scale-125 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
         >
@@ -80,7 +79,7 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
         <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#3D1218]/50 block mb-1.5 sm:mb-2 font-montserrat font-bold">
           {product.categories?.[0]?.name || 'CATEGORY'}
         </span>
-        
+
         <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-1 w-full">
           <Link href={`/product/${product.id}`} className="truncate max-w-[75%]">
             <h3 className="text-[13px] sm:text-[15px] font-outfit font-medium text-[#3D1218] hover:opacity-70 transition-opacity truncate">
@@ -101,7 +100,7 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
         </div>
 
         <div className="text-[16px] sm:text-[18px] font-montserrat font-bold text-[#3D1218] mb-4 sm:mb-5">
-          ₦{product.price ? parseFloat(product.price).toLocaleString() : '15,900'}
+          ₦{product.price ? parseFloat(product.price).toLocaleString() : '0'}
         </div>
 
         <div className="flex justify-center items-center gap-1.5 w-full mt-auto pb-0.5">
@@ -110,7 +109,7 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
             <span className="font-outfit font-bold text-[10px] text-[#3D1218]">{quantity}</span>
             <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-[#3D1218] hover:scale-110 transition-transform"><Minus size={10} strokeWidth={2.5} /></button>
           </div>
-          <motion.button 
+          <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={(e) => { e.preventDefault(); if (!isOutOfStock) addToCart(product, quantity); }}
             className={`flex-[0.58] h-[30px] text-[9px] font-outfit font-medium rounded-full transition-all ${isOutOfStock ? 'bg-gray-100 text-gray-400' : 'bg-[#F5E6E8] text-[#3D1218] hover:bg-[#3D1218] hover:text-white'}`}
