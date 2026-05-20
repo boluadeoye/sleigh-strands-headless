@@ -10,13 +10,13 @@ import ProductTabs from '@/components/product/ProductTabs';
 
 export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
-  
+
   // Parallel Fetch for speed
   const [product, reviews] = await Promise.all([
     getSingleProduct(id),
     getProductReviews(id)
   ]);
-  
+
   if (!product) notFound();
 
   return (
@@ -53,7 +53,7 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
         <Image src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png" alt="Editorial" fill className="object-cover object-[center_25%]" />
       </div>
 
-      <ProductGrid title="Friday Hot Drops" subtitle="Our Shop" />
+      <ProductGrid title="FRIDAY SLEIGH DROPS" subtitle="Our Shop" category="friday-sleigh-drops" />
       <Footer />
     </main>
   );
