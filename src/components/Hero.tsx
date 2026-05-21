@@ -14,19 +14,19 @@ export default function Hero() {
         transition={{ duration: 1.8, ease: [0.25, 0.1, 0.25, 1] }}
         className="absolute inset-0 z-0"
       >
-        {/* 1. POSTER IMAGES (Instant Load - Prevents Black Flash) */}
+        {/* 1. HIGH-RES POSTER IMAGES (Instant Load - Prevents Black Flash) */}
         <div className="hidden md:block absolute inset-0">
           <Image
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777646135/blog_assets/tmod9vs49dv3hc8ptpu0.png"
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779270387/blog_assets/t4dv8k0d6cu8lwzmd7ex.jpg"
             alt="Sleigh Strands Hero"
             fill
-            className="object-cover object-center"
+            className="object-cover object-top"
             priority
           />
         </div>
         <div className="block md:hidden absolute inset-0">
           <Image
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777645864/blog_assets/aevb7xleszxtuelrvqok.png"
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779270387/blog_assets/t4dv8k0d6cu8lwzmd7ex.jpg"
             alt="Sleigh Strands Hero"
             fill
             className="object-cover object-center"
@@ -39,7 +39,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.5, duration: 2 }}
-          className="absolute top-1/2 left-1/2 w-[150vw] h-[266.66vw] md:w-[100vw] md:h-[177.77vw] -translate-x-1/2 -translate-y-1/2 scale-[1.2] md:scale-[1.3] pointer-events-none"
+          className="absolute left-1/2 w-[150vw] h-[266.66vw] md:w-[100vw] md:h-[177.77vw] -translate-x-1/2 top-1/2 -translate-y-1/2 md:top-[-12%] md:translate-y-0 scale-[1.2] md:scale-[1.18] pointer-events-none"
         >
           <iframe
             src="https://www.youtube.com/embed/x1umCKMaJxg?autoplay=1&mute=1&controls=0&loop=1&playlist=x1umCKMaJxg&modestbranding=1&playsinline=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3"
