@@ -13,11 +13,13 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
   const [quantity, setQuantity] = useState(1);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // PRE-ORDER LOGIC GATES
+  // UNIVERSAL PRE-ORDER LOGIC GATES
   const isOutOfStock = product.stock_status === 'outofstock';
+  const isOnBackorder = product.stock_status === 'onbackorder';
   const allowsBackorder = product.backorders !== 'no';
-  const isPreOrder = isOutOfStock && allowsBackorder;
-  const isHardSoldOut = isOutOfStock && !allowsBackorder;
+  
+  const isPreOrder = isOnBackorder || (isOutOfStock && allowsBackorder);
+  const isHardSoldOut = isOutOfStock && !allowsBackorder && !isOnBackorder;
 
   const isWishlisted = wishlistIds.includes(product.id);
   const hasRating = product.rating_count > 0;

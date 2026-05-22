@@ -46,18 +46,21 @@ export default function AddToCart({ product }: { product: any }) {
           item_id: product.id,
           item_name: product.name,
           price: parseFloat(targetPrice),
-          quantity: quantity
+          quantity: quantity,
+          item_variant: selectedVariation ? Object.values(selectedVariation.attributes).map((a: any) => a.option).join(' / ') : undefined
         }]
       }
     });
   };
 
-  // PRE-ORDER LOGIC GATES
+  // UNIVERSAL PRE-ORDER LOGIC GATES
   const target = selectedVariation || product;
   const isOutOfStock = target.stock_status === 'outofstock';
+  const isOnBackorder = target.stock_status === 'onbackorder';
   const allowsBackorder = target.backorders !== 'no';
-  const isPreOrder = isOutOfStock && allowsBackorder;
-  const isHardSoldOut = isOutOfStock && !allowsBackorder;
+  
+  const isPreOrder = isOnBackorder || (isOutOfStock && allowsBackorder);
+  const isHardSoldOut = isOutOfStock && !allowsBackorder && !isOnBackorder;
   
   const currentPrice = target.price;
   const canAdd = !isVariable || (isVariable && selectedVariation && !isHardSoldOut);
@@ -118,6 +121,11 @@ export default function AddToCart({ product }: { product: any }) {
       {isPreOrder && (
         <p className="text-[11px] text-[#FF6B35] font-bold uppercase tracking-widest flex items-center gap-2 bg-[#FF6B35]/5 p-4 rounded-2xl border border-[#FF6B35]/10">
           <Clock size={14} /> This item is available for pre-order and will ship once styled.
+        </p>
+      )}
+      {isVariable && !selectedVariation && (
+        <p className="text-[10px] text-[#8B2632] font-medium italic flex items-center gap-1">
+          <AlertCircle size={12} /> Please select all options to see the final price.
         </p>
       )}
     </div>

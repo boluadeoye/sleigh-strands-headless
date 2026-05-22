@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
-import { Loader2, Lock, CheckCircle, Tag, X, Minus, Plus, Trash2, Gift } from 'lucide-react';
+import { Loader2, Lock, CheckCircle, Tag, X, Minus, Plus, Trash2, Gift, Clock } from 'lucide-react';
 import Image from 'next/image';
 import CancelModal from './CancelModal';
 
@@ -127,6 +127,13 @@ export default function CheckoutClient() {
   const amountToFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
   const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
+  // PRE-ORDER DETECTION
+  const hasPreOrder = cart.some((item: any) => {
+    const status = item.stock_status;
+    const backorders = item.backorders;
+    return status === 'onbackorder' || (status === 'outofstock' && backorders !== 'no');
+  });
+
   const initializePayment = (orderData: any) => {
     const pubKey = process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY;
     (window as any).FlutterwaveCheckout({
@@ -204,7 +211,6 @@ export default function CheckoutClient() {
     }
   };
 
-  // DEFINITIVE FIX: Handle actual cancellation
   const handleCancelOrder = async () => {
     setShowCancelModal(false);
     if (stagedOrder?.orderId) {
@@ -214,7 +220,7 @@ export default function CheckoutClient() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ orderId: stagedOrder.orderId })
         });
-        setStagedOrder(null); // Clear so next attempt creates a fresh order
+        setStagedOrder(null);
       } catch (err) {
         console.error("Failed to cancel order", err);
       }
@@ -285,31 +291,39 @@ export default function CheckoutClient() {
           <h3 className="text-xl font-sans font-bold text-black tracking-tight">Order Summary</h3>
 
           <div className="space-y-5 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
-            {cart.map((item) => (
-              <div key={`${item.id}-${item.variationId || 0}`} className="flex items-center gap-3 group">
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-black/5 shrink-0">
-                  <Image src={item.image} alt={item.name} fill className="object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-black/80 uppercase leading-tight">{item.name}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex items-center bg-black/5 rounded-full px-2 py-0.5">
-                      <button onClick={() => updateQuantity(item.id, -1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Minus size={8} /></button>
-                      <input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 0, item.variationId)}
-                        onBlur={(e) => { if (!e.target.value || parseInt(e.target.value) < 1) setQuantity(item.id, 1, item.variationId); }}
-                        className="w-8 text-center bg-transparent text-[9px] font-bold outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      />
-                      <button onClick={() => updateQuantity(item.id, 1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Plus size={8} /></button>
-                    </div>
-                    <button onClick={() => removeFromCart(item.id, item.variationId)} className="text-[#FF6B35] opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={10} /></button>
+            {cart.map((item) => {
+              const isItemPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
+              return (
+                <div key={`${item.id}-${item.variationId || 0}`} className="flex items-center gap-3 group">
+                  <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-black/5 shrink-0">
+                    <Image src={item.image} alt={item.name} fill className="object-cover" />
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <p className="text-[10px] font-bold text-black/80 uppercase leading-tight">{item.name}</p>
+                      {isItemPreOrder && (
+                        <span className="bg-[#D2A546] text-white text-[7px] px-1.5 py-0.5 rounded-sm uppercase font-bold tracking-widest">Pre-order</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center bg-black/5 rounded-full px-2 py-0.5">
+                        <button onClick={() => updateQuantity(item.id, -1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Minus size={8} /></button>
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => setQuantity(item.id, parseInt(e.target.value) || 0, item.variationId)}
+                          onBlur={(e) => { if (!e.target.value || parseInt(e.target.value) < 1) setQuantity(item.id, 1, item.variationId); }}
+                          className="w-8 text-center bg-transparent text-[9px] font-bold outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <button onClick={() => updateQuantity(item.id, 1, item.variationId)} className="text-black/30 hover:text-[#8B2632]"><Plus size={8} /></button>
+                      </div>
+                      <button onClick={() => removeFromCart(item.id, item.variationId)} className="text-[#FF6B35] opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={10} /></button>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#3D1218] shrink-0">₦{(item.price * item.quantity).toLocaleString()}</span>
                 </div>
-                <span className="text-[10px] font-bold text-[#3D1218] shrink-0">₦{(item.price * item.quantity).toLocaleString()}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
           
           <div className="space-y-3">
@@ -354,6 +368,16 @@ export default function CheckoutClient() {
             </div>
             <div className="h-1 w-full bg-black/5 rounded-full overflow-hidden"><div className="h-full bg-[#8B2632] transition-all duration-700" style={{ width: `${progressPercent}%` }} /></div>
           </div>
+
+          {/* MIXED CART NOTICE */}
+          {hasPreOrder && (
+            <div className="bg-[#FDF8F0] border border-[#D2A546]/30 rounded-xl p-4 flex items-start gap-3">
+              <Clock size={16} className="text-[#D2A546] shrink-0 mt-0.5" />
+              <p className="text-[10px] text-black/70 leading-relaxed">
+                <strong className="text-[#8B2632]">✨ Pre-order Notice:</strong> Your order contains pre-order items. The entire shipment will be dispatched once your luxury strands are styled and ready.
+              </p>
+            </div>
+          )}
 
           <button type="submit" form="checkout-form" disabled={loading || shippingLoading || cart.length === 0 || (!isFreeShipping && currentShipping === 0)} className="w-full bg-[#FF6B35] text-white py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-xl transition-all active:scale-95 disabled:opacity-50">
             {loading ? <Loader2 className="animate-spin" size={16} /> : <><Lock size={14}/> Pay Securely</>}
