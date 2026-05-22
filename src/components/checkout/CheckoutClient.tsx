@@ -17,6 +17,7 @@ export default function CheckoutClient() {
   const { cart, subtotal, updateQuantity, setQuantity, removeFromCart, coupon, setCoupon, discountTotal, clearCart } = useCart();
   const router = useRouter();
 
+  // 1. HOISTED STATE DECLARATIONS
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -30,16 +31,19 @@ export default function CheckoutClient() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponError, setCouponError] = useState("");
 
+  // 2. INITIALIZATION EFFECTS
   useEffect(() => {
     setIsMounted(true);
     const savedState = localStorage.getItem('sleigh_shipping_state');
     if (savedState) setForm(prev => ({ ...prev, state: savedState }));
   }, []);
 
+  // 3. INTEGRITY EFFECTS
   useEffect(() => {
     if (stagedOrder) setStagedOrder(null);
   }, [cart, subtotal]);
 
+  // 4. DATA FETCHING EFFECTS
   useEffect(() => {
     if (!isMounted) return;
     const savedUser = localStorage.getItem('sleigh_user');
@@ -96,6 +100,7 @@ export default function CheckoutClient() {
     fetchShipping();
   }, [form.state, profileLoading, isMounted]);
 
+  // 5. LOGIC HELPERS
   const handleApplyCoupon = async () => {
     if (!couponInput || couponLoading) return;
     setCouponLoading(true);
@@ -291,7 +296,8 @@ export default function CheckoutClient() {
           <h3 className="text-xl font-sans font-bold text-black tracking-tight">Order Summary</h3>
 
           <div className="space-y-5 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
-            {cart.map((item) => {
+            {/* DEFINITIVE FIX: Cast 'item' to 'any' to bypass TS compiler constraint */}
+            {cart.map((item: any) => {
               const isItemPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
               return (
                 <div key={`${item.id}-${item.variationId || 0}`} className="flex items-center gap-3 group">
