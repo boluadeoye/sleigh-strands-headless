@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { sendEmail, getLuxuryTemplate } from '@/lib/mail';
 
 export async function POST(req: Request) {
   try {
@@ -40,7 +39,7 @@ export async function POST(req: Request) {
         }
 
         if (Number(order.total) <= verifyData.data.amount) {
-          // Update WooCommerce
+          // Update WooCommerce order status. This PUT request natively triggers WordPress transactional emails
           await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -51,60 +50,7 @@ export async function POST(req: Request) {
               note: `Flutterwave payment successful. Ref: ${txRef}`
             })
           });
-
-          // Direct SMTP Dispatch (Order Receipts)
-          try {
-            const customerEmail = order.billing?.email || verifyData.data.customer?.email;
-            const customerName = order.billing?.first_name || verifyData.data.customer?.name || 'Babe';
-            const orderTotal = parseFloat(order.total).toLocaleString();
-
-            // A. Customer Receipt
-            const customerEmailContent = getLuxuryTemplate(
-              "Order Confirmed! ✨",
-              `<p>Hi ${customerName},</p>
-               <p>Thank you for shopping with Sleigh Strands. We are excited to prepare your luxury order!</p>
-               <div style="background-color: #FDF8F0; border: 1px solid rgba(61, 18, 24, 0.1); padding: 20px; border-radius: 12px; margin-top: 20px; margin-bottom: 20px;">
-                 <h4 style="margin-top: 0; color: #8B2632; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em;">Order Details</h4>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Order ID:</strong> #${orderId}</p>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Total Paid:</strong> ₦${orderTotal}</p>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Status:</strong> Processing</p>
-               </div>
-               <p>We are already working on preparing, inspecting, and styling your wig to our Sleigh Strands standard. You will receive email updates as soon as your order has been processed and shipped.</p>
-               <p>Thank you for choosing Sleigh Strands.</p>
-               <a href="https://sleigh-strands-headless.vercel.app/account" class="button">Track Your Order</a>`
-            );
-
-            await sendEmail({
-              to: customerEmail,
-              subject: `Your Sleigh Strands Order Confirmed! #${orderId} ✨`,
-              html: customerEmailContent
-            });
-
-            // B. Admin Alert
-            const adminEmailContent = getLuxuryTemplate(
-              "New Order Received! 🚀",
-              `<p>A new transaction has been successfully completed and verified via Flutterwave.</p>
-               <div style="background-color: #FDF8F0; border: 1px solid rgba(61, 18, 24, 0.1); padding: 20px; border-radius: 12px; margin-top: 20px;">
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Order ID:</strong> #${orderId}</p>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Customer:</strong> ${customerName} (${customerEmail})</p>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Total Charged:</strong> ₦${orderTotal}</p>
-                 <p style="margin: 5px 0; font-size: 13px;"><strong>Transaction ID:</strong> ${transactionId}</p>
-               </div>
-               <a href="https://sleigh.staymedia.ng/wp-admin/post.php?post=${orderId}&action=edit" class="button">View in WooCommerce</a>`
-            );
-
-            await sendEmail({
-              to: process.env.SMTP_USER || 'info@sleighstrands.com',
-              subject: `New Sleigh Strands Order #${orderId} 🚀`,
-              html: adminEmailContent
-            });
-
-          } catch (mailError) {
-            console.error("Order confirmation emails failed:", mailError);
-          }
-
         } else {
-          // Amount mismatch (Potential fraud)
           await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
