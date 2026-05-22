@@ -22,7 +22,12 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // Create order as PENDING with dynamic fees
+    // Detect if any item is a pre-order for the global order note
+    const hasPreOrder = items.some((item: any) => 
+      item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no')
+    );
+
+    // Create order with Metadata Tracing
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,18 +39,25 @@ export async function POST(req: Request) {
         customer_id: customerId || 0,
         billing: addressData,
         shipping: addressData,
-        line_items: items.map((item: any) => ({
-          product_id: Number(item.id),
-          variation_id: item.variationId ? Number(item.variationId) : undefined,
-          quantity: Number(item.quantity)
-        })),
+        line_items: items.map((item: any) => {
+          const isPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
+          return {
+            product_id: Number(item.id),
+            variation_id: item.variationId ? Number(item.variationId) : undefined,
+            quantity: Number(item.quantity),
+            // BACKEND TRACE: Add metadata visible in WooCommerce Admin
+            meta_data: isPreOrder ? [{ key: 'Status', value: 'Pre-order' }] : []
+          };
+        }),
         shipping_lines: [{
           method_id: shipping?.method_id || 'flat_rate',
           method_title: shipping?.method_title || 'Standard Shipping',
           total: String(shipping?.cost || 0)
         }],
         coupon_lines: coupon ? [{ code: coupon.code }] : [],
-        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }]
+        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }],
+        // ADMIN TRACE: Add a private note to the order
+        customer_note: hasPreOrder ? "⚠️ This order contains Pre-order items and will ship once styled." : ""
       }),
     });
 

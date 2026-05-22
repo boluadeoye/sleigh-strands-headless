@@ -1,14 +1,17 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type CartItem = { 
-  id: number; 
+type CartItem = {
+  id: number;
   variationId?: number;
-  name: string; 
-  price: number; 
-  image: string; 
-  quantity: number; 
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
   selectedAttributes?: any;
+  // NEW: Persistence fields for Pre-order logic
+  stock_status?: string;
+  backorders?: string;
 };
 
 type Coupon = { code: string; amount: number; type: string; } | null;
@@ -46,41 +49,39 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = (product: any, qty: number = 1, variation: any = null) => {
     setCart(prev => {
-      // Check if this specific variation (or simple product) is already in cart
-      const existing = prev.find(item => 
+      const existing = prev.find(item =>
         variation ? item.variationId === variation.id : (item.id === product.id && !item.variationId)
       );
-      
+
       if (existing) {
-        return prev.map(item => 
+        return prev.map(item =>
           (variation ? item.variationId === variation.id : (item.id === product.id && !item.variationId))
-            ? { ...item, quantity: item.quantity + qty } 
+            ? { ...item, quantity: item.quantity + qty }
             : item
         );
       }
 
-      // FIX: Correctly extract attribute options to prevent [OBJECT OBJECT]
       let variantLabel = "";
       if (variation && variation.attributes) {
-        // WooCommerce attributes are usually an array of {name, option}
         if (Array.isArray(variation.attributes)) {
           variantLabel = variation.attributes.map((a: any) => a.option).filter(Boolean).join(' / ');
         } else {
-          // Fallback for object-style attributes
           variantLabel = Object.values(variation.attributes).join(' / ');
         }
       }
-
       const finalName = variantLabel ? `${product.name} - ${variantLabel}` : product.name;
 
-      return [...prev, { 
-        id: product.id, 
+      return [...prev, {
+        id: product.id,
         variationId: variation?.id,
-        name: finalName, 
-        price: parseFloat(variation?.price || product.price || "0"), 
-        image: variation?.image?.src || product.images?.[0]?.src || "", 
+        name: finalName,
+        price: parseFloat(variation?.price || product.price || "0"),
+        image: variation?.image?.src || product.images?.[0]?.src || "",
         quantity: qty,
-        selectedAttributes: variation?.attributes || null
+        selectedAttributes: variation?.attributes || null,
+        // PERSISTENCE: Save stock status for Checkout/API logic
+        stock_status: variation?.stock_status || product.stock_status,
+        backorders: variation?.backorders || product.backorders
       }];
     });
     setIsDrawerOpen(true);
@@ -91,17 +92,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const updateQuantity = (id: number, delta: number, variationId?: number) => {
-    setCart(prev => prev.map(item => 
+    setCart(prev => prev.map(item =>
       (variationId ? item.variationId === variationId : (item.id === id && !item.variationId))
-        ? { ...item, quantity: Math.max(1, item.quantity + delta) } 
+        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
         : item
     ));
   };
 
   const setQuantity = (id: number, qty: number, variationId?: number) => {
-    setCart(prev => prev.map(item => 
+    setCart(prev => prev.map(item =>
       (variationId ? item.variationId === variationId : (item.id === id && !item.variationId))
-        ? { ...item, quantity: Math.max(1, qty) } 
+        ? { ...item, quantity: Math.max(1, qty) }
         : item
     ));
   };
