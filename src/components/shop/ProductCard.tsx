@@ -13,9 +13,13 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
   const [quantity, setQuantity] = useState(1);
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  // PRE-ORDER LOGIC GATES
   const isOutOfStock = product.stock_status === 'outofstock';
-  const isWishlisted = wishlistIds.includes(product.id);
+  const allowsBackorder = product.backorders !== 'no';
+  const isPreOrder = isOutOfStock && allowsBackorder;
+  const isHardSoldOut = isOutOfStock && !allowsBackorder;
 
+  const isWishlisted = wishlistIds.includes(product.id);
   const hasRating = product.rating_count > 0;
   const displayRating = hasRating ? Number(product.average_rating).toFixed(1) : null;
 
@@ -42,7 +46,6 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
     >
       <div className="relative aspect-[4/5] rounded-[10px] overflow-hidden mb-3 sm:mb-4 bg-[#F9F9F9]">
         <Link href={`/product/${product.id}`}>
-          {/* BOUTIQUE ZOOM ENGINE: Anchored to Top-Center */}
           <motion.div
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
@@ -58,7 +61,7 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
             />
           </motion.div>
         </Link>
-        
+
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
           className={`absolute top-2.5 right-2.5 sm:top-4 sm:right-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] hover:scale-125 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
@@ -66,7 +69,15 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
           <Heart className="w-[18px] h-[18px] sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} fill={isWishlisted ? "currentColor" : "none"} />
         </button>
 
-        {isOutOfStock && (
+        {/* DYNAMIC STATUS OVERLAY */}
+        {isPreOrder && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/5 backdrop-blur-[1px] z-20">
+            <span className="bg-[#D2A546] text-white text-[8px] sm:text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-widest shadow-lg">
+              Pre-order
+            </span>
+          </div>
+        )}
+        {isHardSoldOut && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[2px] z-20">
             <span className="bg-[#E86A6A] text-white text-[8px] sm:text-[9px] px-3 py-1 rounded-full uppercase font-bold tracking-widest shadow-lg">
               Sold Out
@@ -111,10 +122,16 @@ export default function ProductCard({ product, index = 0 }: { product: any, inde
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={(e) => { e.preventDefault(); if (!isOutOfStock) addToCart(product, quantity); }}
-            className={`flex-[0.58] h-[30px] text-[9px] font-outfit font-medium rounded-full transition-all ${isOutOfStock ? 'bg-gray-100 text-gray-400' : 'bg-[#F5E6E8] text-[#3D1218] hover:bg-[#3D1218] hover:text-white'}`}
+            onClick={(e) => { e.preventDefault(); if (!isHardSoldOut) addToCart(product, quantity); }}
+            className={`flex-[0.58] h-[30px] text-[9px] font-outfit font-medium rounded-full transition-all ${
+              isHardSoldOut 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                : isPreOrder 
+                  ? 'bg-[#FF6B35] text-white hover:bg-black' 
+                  : 'bg-[#F5E6E8] text-[#3D1218] hover:bg-[#3D1218] hover:text-white'
+            }`}
           >
-            {isOutOfStock ? 'Sold Out' : 'Add to cart'}
+            {isHardSoldOut ? 'Sold Out' : isPreOrder ? 'Pre-order' : 'Add to cart'}
           </motion.button>
         </div>
       </div>
