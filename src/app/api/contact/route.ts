@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sendEmail, getLuxuryTemplate } from '@/lib/mail';
 
 export async function POST(request: Request) {
   try {
@@ -30,24 +31,50 @@ export async function POST(request: Request) {
     });
 
     const result = await response.json();
-
-    // mail_failed is accepted as success because it means Flamingo captured the data 
-    // even if the WordPress mail server failed to send the notification email.
     const isSuccess = result.status === 'mail_sent' || result.status === 'mail_failed';
 
     if (response.ok && isSuccess) {
-      return NextResponse.json({ 
-        success: true, 
-        message: "Inquiry synchronized with Flamingo" 
+      // Direct SMTP Dispatch to Admin
+      try {
+        const adminEmailContent = getLuxuryTemplate(
+          "New Website Inquiry Received",
+          `<p>A new contact form submission has been logged:</p>
+           <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+             <tr>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; font-weight: bold; width: 120px;">Name:</td>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0;">${name}</td>
+             </tr>
+             <tr>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; font-weight: bold;">Email:</td>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0;"><a href="mailto:${email}">${email}</a></td>
+             </tr>
+             <tr>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; font-weight: bold;">Message:</td>
+               <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; white-space: pre-wrap;">${message}</td>
+             </tr>
+           </table>`
+        );
+
+        await sendEmail({
+          to: process.env.SMTP_USER || 'info@sleighstrands.com',
+          subject: `New Sleigh Strands Inquiry from ${name}`,
+          html: adminEmailContent
+        });
+      } catch (mailError) {
+        console.error("Admin notification email failed:", mailError);
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Inquiry synchronized and dispatched"
       });
     } else {
       console.error("WordPress CF7 Reject:", result);
-      return NextResponse.json({ 
-        success: false, 
-        error: result.message || "Submission rejected" 
+      return NextResponse.json({
+        success: false,
+        error: result.message || "Submission rejected"
       }, { status: 400 });
     }
-
   } catch (error) {
     console.error("Contact Bridge Exception:", error);
     return NextResponse.json({ error: "Internal Bridge Error" }, { status: 500 });
