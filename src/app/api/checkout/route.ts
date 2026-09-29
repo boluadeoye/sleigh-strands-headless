@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customer, items, coupon, shipping, customerId, transactionFee } = body;
+    const { customer, items, coupon, shipping, customerId, transactionFee, giftPackagingTotal } = body;
 
     const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const ck = process.env.WC_CONSUMER_KEY;
@@ -22,50 +22,88 @@ export async function POST(req: Request) {
       country: 'NG'
     };
 
-    // Detect if any item is a pre-order for the global order note
-    const hasPreOrder = items.some((item: any) => 
+    const hasPreOrder = items.some((item: any) =>
       item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no')
     );
 
-    // Create order with Metadata Tracing
+    const hasGiftItems = items.some((item: any) => item.giftPackaging?.id === 'premium');
+
+    const calculatedGiftFee = items.reduce((acc: number, item: any) => {
+      if (item.giftPackaging?.id === 'premium') {
+        return acc + ((item.giftPackaging.price || 5000) * item.quantity);
+      }
+      return acc;
+    }, 0);
+
+    const giftFeeToApply = Number(giftPackagingTotal !== undefined ? giftPackagingTotal : calculatedGiftFee);
+
+    const giftMessagesSummary = items
+      .filter((i: any) => i.giftPackaging?.id === 'premium' && i.giftPackaging?.message)
+      .map((i: any) => `[${i.name}]: "${i.giftPackaging.message}"`)
+      .join(' | ');
+
+    const orderPayload: any = {
+      payment_method: 'flutterwave',
+      payment_method_title: 'Flutterwave (Card/Transfer)',
+      set_paid: false,
+      status: 'pending',
+      customer_id: customerId || 0,
+      billing: addressData,
+      shipping: addressData,
+      line_items: items.map((item: any) => {
+        const isPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
+        const isGift = item.giftPackaging?.id === 'premium';
+
+        return {
+          product_id: Number(item.id),
+          variation_id: item.variationId ? Number(item.variationId) : undefined,
+          quantity: Number(item.quantity),
+          meta_data: [
+            ...(isPreOrder ? [{ key: 'Status', value: 'Pre-order' }] : []),
+            ...(isGift ? [
+              { key: 'Gift Packaging', value: item.giftPackaging.name },
+              { key: 'Gift Packaging Fee', value: `₦${item.giftPackaging.price?.toLocaleString()}` },
+              { key: 'Gift Message', value: item.giftPackaging.message || 'No custom note provided' }
+            ] : [])
+          ]
+        };
+      }),
+      shipping_lines: [{
+        method_id: shipping?.method_id || 'flat_rate',
+        method_title: shipping?.method_title || 'Standard Shipping',
+        total: String(shipping?.cost || 0)
+      }],
+      coupon_lines: coupon ? [{ code: coupon.code }] : [],
+      fee_lines: [
+        { name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' },
+        ...(giftFeeToApply > 0 ? [
+          { name: 'Premium Gift Packaging', total: String(giftFeeToApply), tax_class: '' }
+        ] : [])
+      ],
+      meta_data: [
+        ...(hasGiftItems ? [
+          { key: '_is_gift_order', value: 'YES' },
+          { key: 'Gift Order Total Fee', value: `₦${giftFeeToApply.toLocaleString()}` },
+          { key: 'Gift Messages List', value: giftMessagesSummary || 'No custom card note provided' }
+        ] : [])
+      ],
+      customer_note: [
+        hasPreOrder ? "⚠️ This order contains Pre-order items and will ship once styled." : "",
+        hasGiftItems ? `🎁 GIFT ORDER: Packaging requested. ${giftMessagesSummary ? `Card Message: ${giftMessagesSummary}` : ''}` : ""
+      ].filter(Boolean).join('\n\n')
+    };
+
     const createResponse = await fetch(`${baseUrl}/wp-json/wc/v3/orders${auth}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        payment_method: 'flutterwave',
-        payment_method_title: 'Flutterwave (Card/Transfer)',
-        set_paid: false,
-        status: 'pending',
-        customer_id: customerId || 0,
-        billing: addressData,
-        shipping: addressData,
-        line_items: items.map((item: any) => {
-          const isPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
-          return {
-            product_id: Number(item.id),
-            variation_id: item.variationId ? Number(item.variationId) : undefined,
-            quantity: Number(item.quantity),
-            // BACKEND TRACE: Add metadata visible in WooCommerce Admin
-            meta_data: isPreOrder ? [{ key: 'Status', value: 'Pre-order' }] : []
-          };
-        }),
-        shipping_lines: [{
-          method_id: shipping?.method_id || 'flat_rate',
-          method_title: shipping?.method_title || 'Standard Shipping',
-          total: String(shipping?.cost || 0)
-        }],
-        coupon_lines: coupon ? [{ code: coupon.code }] : [],
-        fee_lines: [{ name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' }],
-        // ADMIN TRACE: Add a private note to the order
-        customer_note: hasPreOrder ? "⚠️ This order contains Pre-order items and will ship once styled." : ""
-      }),
+      body: JSON.stringify(orderPayload),
     });
 
     const order = await createResponse.json();
     if (!createResponse.ok) throw new Error(order.message || 'Creation Failed');
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       orderId: order.id,
       total: order.total,
       currency: order.currency || 'NGN'

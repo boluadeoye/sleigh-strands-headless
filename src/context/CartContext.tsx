@@ -1,7 +1,14 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type CartItem = {
+export type GiftPackagingOption = {
+  id: 'standard' | 'premium';
+  name: string;
+  price: number;
+  message?: string;
+};
+
+export type CartItem = {
   id: number;
   variationId?: number;
   name: string;
@@ -9,23 +16,24 @@ type CartItem = {
   image: string;
   quantity: number;
   selectedAttributes?: any;
-  // NEW: Persistence fields for Pre-order logic
   stock_status?: string;
   backorders?: string;
+  giftPackaging?: GiftPackagingOption;
 };
 
 type Coupon = { code: string; amount: number; type: string; } | null;
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: any, qty?: number, variation?: any) => void;
-  removeFromCart: (id: number, variationId?: number) => void;
-  updateQuantity: (id: number, delta: number, variationId?: number) => void;
-  setQuantity: (id: number, qty: number, variationId?: number) => void;
+  addToCart: (product: any, qty?: number, variation?: any, giftPackaging?: GiftPackagingOption) => void;
+  removeFromCart: (id: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => void;
+  updateQuantity: (id: number, delta: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => void;
+  setQuantity: (id: number, qty: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => void;
   clearCart: () => void;
   isDrawerOpen: boolean;
   setIsDrawerOpen: (open: boolean) => void;
   subtotal: number;
+  giftPackagingTotal: number;
   coupon: Coupon;
   setCoupon: (coupon: Coupon) => void;
   discountTotal: number;
@@ -40,25 +48,39 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const savedCart = localStorage.getItem('sleigh_cart');
-    if (savedCart) setCart(JSON.parse(savedCart));
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        setCart([]);
+      }
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('sleigh_cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: any, qty: number = 1, variation: any = null) => {
+  const addToCart = (
+    product: any,
+    qty: number = 1,
+    variation: any = null,
+    giftPackaging: GiftPackagingOption = { id: 'standard', name: 'Standard Packaging', price: 0 }
+  ) => {
     setCart(prev => {
-      const existing = prev.find(item =>
-        variation ? item.variationId === variation.id : (item.id === product.id && !item.variationId)
-      );
+      const existingIndex = prev.findIndex(item => {
+        const sameVar = variation ? item.variationId === variation.id : (item.id === product.id && !item.variationId);
+        const itemGiftId = item.giftPackaging?.id || 'standard';
+        const targetGiftId = giftPackaging?.id || 'standard';
+        const itemGiftMsg = (item.giftPackaging?.message || '').trim();
+        const targetGiftMsg = (giftPackaging?.message || '').trim();
+        return sameVar && itemGiftId === targetGiftId && itemGiftMsg === targetGiftMsg;
+      });
 
-      if (existing) {
-        return prev.map(item =>
-          (variation ? item.variationId === variation.id : (item.id === product.id && !item.variationId))
-            ? { ...item, quantity: item.quantity + qty }
-            : item
-        );
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex].quantity += qty;
+        return updated;
       }
 
       let variantLabel = "";
@@ -79,32 +101,45 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         image: variation?.image?.src || product.images?.[0]?.src || "",
         quantity: qty,
         selectedAttributes: variation?.attributes || null,
-        // PERSISTENCE: Save stock status for Checkout/API logic
         stock_status: variation?.stock_status || product.stock_status,
-        backorders: variation?.backorders || product.backorders
+        backorders: variation?.backorders || product.backorders,
+        giftPackaging: giftPackaging || { id: 'standard', name: 'Standard Packaging', price: 0 }
       }];
     });
     setIsDrawerOpen(true);
   };
 
-  const removeFromCart = (id: number, variationId?: number) => {
-    setCart(prev => prev.filter(item => variationId ? item.variationId !== variationId : item.id !== id));
+  const removeFromCart = (id: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => {
+    setCart(prev => prev.filter(item => {
+      const matchVar = variationId ? item.variationId === variationId : (item.id === id && !item.variationId);
+      const matchGiftId = (item.giftPackaging?.id || 'standard') === (giftPackagingId || 'standard');
+      const matchMsg = (item.giftPackaging?.message || '').trim() === (giftMessage || '').trim();
+      return !(matchVar && matchGiftId && matchMsg);
+    }));
   };
 
-  const updateQuantity = (id: number, delta: number, variationId?: number) => {
-    setCart(prev => prev.map(item =>
-      (variationId ? item.variationId === variationId : (item.id === id && !item.variationId))
-        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-        : item
-    ));
+  const updateQuantity = (id: number, delta: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => {
+    setCart(prev => prev.map(item => {
+      const matchVar = variationId ? item.variationId === variationId : (item.id === id && !item.variationId);
+      const matchGiftId = (item.giftPackaging?.id || 'standard') === (giftPackagingId || 'standard');
+      const matchMsg = (item.giftPackaging?.message || '').trim() === (giftMessage || '').trim();
+      if (matchVar && matchGiftId && matchMsg) {
+        return { ...item, quantity: Math.max(1, item.quantity + delta) };
+      }
+      return item;
+    }));
   };
 
-  const setQuantity = (id: number, qty: number, variationId?: number) => {
-    setCart(prev => prev.map(item =>
-      (variationId ? item.variationId === variationId : (item.id === id && !item.variationId))
-        ? { ...item, quantity: Math.max(1, qty) }
-        : item
-    ));
+  const setQuantity = (id: number, qty: number, variationId?: number, giftPackagingId?: string, giftMessage?: string) => {
+    setCart(prev => prev.map(item => {
+      const matchVar = variationId ? item.variationId === variationId : (item.id === id && !item.variationId);
+      const matchGiftId = (item.giftPackaging?.id || 'standard') === (giftPackagingId || 'standard');
+      const matchMsg = (item.giftPackaging?.message || '').trim() === (giftMessage || '').trim();
+      if (matchVar && matchGiftId && matchMsg) {
+        return { ...item, quantity: Math.max(1, qty) };
+      }
+      return item;
+    }));
   };
 
   const clearCart = () => {
@@ -114,6 +149,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const giftPackagingTotal = cart.reduce((acc, item) => {
+    const giftFee = (item.giftPackaging?.id === 'premium' ? item.giftPackaging.price : 0) || 0;
+    return acc + (giftFee * item.quantity);
+  }, 0);
 
   let discountTotal = 0;
   if (coupon) {
@@ -125,7 +164,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <CartContext.Provider value={{
       cart, addToCart, removeFromCart, updateQuantity, setQuantity, clearCart,
-      isDrawerOpen, setIsDrawerOpen, subtotal, coupon, setCoupon, discountTotal
+      isDrawerOpen, setIsDrawerOpen, subtotal, giftPackagingTotal, coupon, setCoupon, discountTotal
     }}>
       {children}
     </CartContext.Provider>
