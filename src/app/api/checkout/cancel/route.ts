@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     const { orderId } = await req.json();
     if (!orderId) return NextResponse.json({ error: 'Missing order ID' }, { status: 400 });
 
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
     const auth = `?consumer_key=${ck}&consumer_secret=${cs}`;

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
 

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 async function getPost(slug: string) {
-  const baseUrl = 'https://sleigh.staymedia.ng';
+  const baseUrl = 'https://sleighstrands.com/admin';
   try {
     const res = await fetch(`${baseUrl}/wp-json/wp/v2/posts?slug=${slug}&_embed`, { next: { revalidate: 3600 } });
     const data = await res.json();

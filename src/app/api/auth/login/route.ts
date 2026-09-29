@@ -4,7 +4,7 @@ export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();
     // Clean URL: Remove trailing slash
-    const rawUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const rawUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const baseUrl = rawUrl.replace(/\/$/, '');
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;

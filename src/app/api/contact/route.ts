@@ -5,7 +5,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, message } = body;
 
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
     const FORM_ID = '8';

@@ -7,7 +7,7 @@ export async function DELETE(request: Request) {
     
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
 
     if (!tokenId || !ck || !cs) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });

@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
 
     const cleanCode = code.trim().toUpperCase();
     const res = await fetch(`${baseUrl}/wp-json/wc/v3/coupons?code=${cleanCode}&consumer_key=${ck}&consumer_secret=${cs}`);

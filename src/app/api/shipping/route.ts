@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     const { state } = await req.json();
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const auth = `?consumer_key=${ck}&consumer_secret=${cs}`;
 
     // 1. Fetch all zones

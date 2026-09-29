@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function PUT(req: Request) {
   try {
     const { id, firstName, lastName, email, shipping, password } = await req.json();
-    const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+    const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
     const ck = process.env.WC_CONSUMER_KEY;
     const cs = process.env.WC_CONSUMER_SECRET;
 
