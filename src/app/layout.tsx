@@ -7,7 +7,7 @@ import UIShell from '@/components/ui/UIShell';
 import Script from 'next/script';
 
 const sans = Montserrat({ subsets: ["latin"], variable: "--font-sans", weight: ["400", "500", "600", "700"] });
-const serif = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-sans", weight: ["400", "500", "600", "700"], style: ["normal", "italic"] });
+const serif = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-serif", weight: ["400", "500", "600", "700"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
   title: "Sleigh Strands | Luxury Hair & Wigs",

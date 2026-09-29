@@ -19,8 +19,8 @@ export default function TermsPage() {
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden bg-[#4A1018]">
         <div className="absolute inset-0 opacity-70 blur-[2px] scale-105">
           <img
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png"
-            className="w-full h-full object-cover"
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779784645/blog_assets/kqlt5ehf1fhox5pqd5dp.jpg"
+            className="w-full h-full object-cover object-top"
             alt=""
           />
         </div>

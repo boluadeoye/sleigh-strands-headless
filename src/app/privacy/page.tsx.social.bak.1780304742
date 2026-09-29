@@ -1,47 +1,21 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Mail, Instagram } from 'lucide-react';
 
 /* ─── SHARED COMPONENTS ─────────────────────────────────────────────────── */
-function LuxuryListBlock({ 
-  items 
-}: { 
-  items: { 
-    label?: string; 
-    text: string; 
-    href?: string; 
-    icon?: React.ComponentType<{ size?: number; className?: string }> 
-  }[] 
-}) {
+
+function LuxuryListBlock({ items }: { items: { label?: string; text: string }[] }) {
   return (
     <div className="bg-[#F9F9F9] rounded-[24px] px-5 py-6 md:p-8 space-y-5 border border-black/[0.01] mt-4">
       {items.map((item, i) => (
         <div key={i} className="flex items-start gap-3 md:gap-4 min-w-0">
-          {/* Bullet: Strict Burgundy Dot or Lucide Icon */}
-          {item.icon ? (
-            <div className="mt-[2px] shrink-0 text-[#3D1218]">
-              <item.icon size={16} />
-            </div>
-          ) : (
-            <div className="w-2 h-2 rounded-full bg-[#3D1218] mt-2 shrink-0" />
-          )}
+          {/* Bullet: Strict Burgundy Dot */}
+          <div className="w-2 h-2 rounded-full bg-[#3D1218] mt-2 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="font-montserrat text-sm md:text-[15px] leading-relaxed text-[#0C0608]/80 break-words">
               {item.label && (
                 <span className="font-bold text-[#3D1218] mr-1">{item.label}:</span>
               )}
-              {item.href ? (
-                <a 
-                  href={item.href} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-[#FF6B35] hover:underline font-semibold"
-                >
-                  {item.text}
-                </a>
-              ) : (
-                item.text
-              )}
+              {item.text}
             </p>
           </div>
         </div>
@@ -51,16 +25,17 @@ function LuxuryListBlock({
 }
 
 /* ─── PAGE ──────────────────────────────────────────────────────────────── */
+
 export default function PrivacyPolicy() {
   return (
     <main className="bg-[#FDF8F0] min-h-screen">
       <Navbar variant="solid" />
-
+      
       {/* 1. EDITORIAL HERO */}
       <section className="relative h-[280px] md:h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/40 z-10" />
-        <img
-          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776160062/blog_assets/vkp8knugjh0e4rmjl385.png"
+        <img 
+          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776160062/blog_assets/vkp8knugjh0e4rmjl385.png" 
           className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           alt="Privacy Hero"
         />
@@ -72,8 +47,9 @@ export default function PrivacyPolicy() {
       {/* 2. CONTENT CARD: Calibrated Mobile Padding */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 -mt-12 md:-mt-16 relative z-30 pb-24">
         <div className="bg-white rounded-[32px] md:rounded-[40px] px-5 py-10 md:p-16 lg:p-20 shadow-[0_20px_80px_rgba(0,0,0,0.04)] border border-black/[0.02]">
+          
           <div className="space-y-12 md:space-y-14">
-
+            
             {/* SECTION: PRIVACY & DATA PROTECTION */}
             <div className="space-y-4">
               <div className="space-y-1">
@@ -87,7 +63,7 @@ export default function PrivacyPolicy() {
               <div className="space-y-4 pt-2">
                 <h3 className="font-outfit text-lg font-bold text-[#3D1218]">Our Commitment to Your Privacy</h3>
                 <p className="font-montserrat text-sm md:text-base text-[#0C0608]/70 leading-relaxed">
-                  At Sleigh Strands, your trust is our most valued asset. We are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data to provide a seamless and secure shopping experience.
+                  At Sleigh Strand, your trust is our most valued asset. We are committed to protecting the personal information you share with us. This policy outlines how we collect, use, and safeguard your data to provide a seamless and secure shopping experience.
                 </p>
               </div>
             </div>
@@ -132,7 +108,7 @@ export default function PrivacyPolicy() {
                 Data Sharing & Security
               </h2>
               <p className="font-montserrat text-sm text-[#0C0608]/60 leading-relaxed">
-                Sleigh Strands does not, and will never, sell your personal data to third parties. We only share information with trusted partners essential to our operations, such as:
+                Sleigh Strand does not, and will never, sell your personal data to third parties. We only share information with trusted partners essential to our operations, such as:
               </p>
               <LuxuryListBlock items={[
                 { label: "Logistics Partners", text: "To deliver your luxury bundles to your doorstep." },
@@ -160,8 +136,8 @@ export default function PrivacyPolicy() {
                 For questions regarding our privacy practices or to exercise your data rights, please reach out to our privacy team:
               </p>
               <LuxuryListBlock items={[
-                { label: "Email", text: "privacy@sleighstrands.com", href: "mailto:privacy@sleighstrands.com", icon: Mail },
-                { label: "Instagram", text: "@sleigh_strands", href: "https://www.instagram.com/sleigh_strands?igsh=a2FidnF6d2oxbGRt", icon: Instagram }
+                { label: "Email", text: "privacy@sleighstrand.com" },
+                { label: "WhatsApp", text: "09056113019" }
               ]} />
             </div>
 

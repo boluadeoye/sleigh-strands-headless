@@ -4,22 +4,7 @@ import Link from 'next/link';
 import { Smile, Star, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Sarah J.",
-    product: "24\" Raw Cambodian Silk Press",
-    image: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777113249/blog_assets/ajnwkf6amqnjae2e0oes.jpg",
-    text: "I've tried countless brands, but the luster on these bundles is unmatched. Zero shedding and the cuticles are clearly intact. It blends so seamlessly."
-  },
-  {
-    id: 2,
-    name: "Amara O.",
-    product: "HD Lace Frontal Wig - Body Wave",
-    image: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777113260/blog_assets/mkn9hnehx4seqfxtdozo.jpg",
-    text: "The lace literally disappeared into my skin! I wore this for my vacation and didn't have to worry about lifting. It's soft, bouncy, and holds a curl."
-  }
-];
+const testimonials: any[] = [];
 
 export default function Testimonials() {
   return (
@@ -44,13 +29,15 @@ export default function Testimonials() {
             <Smile size={14} className="text-white" />
             <span className="text-white text-[9px] font-bold uppercase tracking-[0.2em]">Testimonials</span>
           </div>
-          
+
           <h2 className="text-white font-heading text-3xl md:text-5xl font-medium mb-3 tracking-tight drop-shadow-sm">
-            Real Muse, <span className="text-[#D2A546]">Real Results</span>
+            SLEIGH BABE REVIEWS <span className="text-[#D2A546]">COMING SOON</span>
           </h2>
-          
+
           <p className="text-white/80 font-sans text-xs md:text-base max-w-xl mx-auto leading-relaxed">
-            From raw bundles to red-carpet finishes, see how our community wears excellence every day.
+            We can't wait to hear what our Sleigh Babes think ✨
+            <br />
+            Customer reviews, unboxings, and transformations will be featured here soon 🤍
           </p>
         </div>
 
@@ -59,7 +46,7 @@ export default function Testimonials() {
           <div className="max-w-[1440px] mx-auto px-6 md:px-12">
             <div className="flex md:grid md:grid-cols-2 gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar">
               {testimonials.map((t) => (
-                <div 
+                <div
                   key={t.id}
                   className="min-w-[90vw] md:min-w-0 snap-center flex flex-row items-center gap-4 md:gap-6"
                 >
@@ -92,7 +79,7 @@ export default function Testimonials() {
 
             {/* Figma Progress Bar */}
             <div className="relative w-full max-w-[200px] md:max-w-md mx-auto h-[2px] bg-white/20 mt-8 overflow-hidden rounded-full">
-              <motion.div 
+              <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: "0%" }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -105,7 +92,7 @@ export default function Testimonials() {
         {/* Footer CTA */}
         <div className="text-center mt-8 md:mt-12">
           <p className="text-white/80 font-sans text-[11px] md:text-sm mb-6 tracking-wide">
-            Join 5,000+ Stunning Women
+            Become one of our very first Sleigh Babes and shop the launch collection ✨
           </p>
           <Link href="/shop">
             <button className="bg-[#D2A546] text-white px-8 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-[#c1943d] transition-all">

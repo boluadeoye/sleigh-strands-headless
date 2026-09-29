@@ -3,9 +3,9 @@ import Image from 'next/image';
 export default function EditorialSection() {
   return (
     <section className="relative w-full h-[400px] md:h-[550px] overflow-hidden bg-[#0C0608]">
-      <Image 
-        src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png?v=2" 
-        alt="Editorial" fill className="object-cover" 
+      <Image
+        src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779784645/blog_assets/kqlt5ehf1fhox5pqd5dp.jpg"
+        alt="Editorial" fill className="object-cover object-top"
       />
       <div className="absolute inset-0 bg-black/30" />
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">

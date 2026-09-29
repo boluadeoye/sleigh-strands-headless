@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import AuthForms from '@/components/account/AuthForms';
-import Dashboard from '@/components/account/Dashboard';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+import AuthForms from '../../components/account/AuthForms';
+import Dashboard from '../../components/account/Dashboard';
 
 export default function AccountPage() {
   const [user, setUser] = useState<any>(null);

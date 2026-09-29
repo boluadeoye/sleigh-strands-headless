@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 async function getPosts() {
-  const baseUrl = 'https://sleigh.staymedia.ng';
+  const baseUrl = 'https://sleighstrands.com/admin';
   try {
     const res = await fetch(`${baseUrl}/wp-json/wp/v2/posts?_embed`, { next: { revalidate: 3600 } });
     return res.json();
@@ -21,7 +21,11 @@ export default async function BlogPage() {
       <Navbar variant="solid" />
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden bg-[#4A1018]">
         <div className="absolute inset-0 opacity-70 blur-[2px] scale-105">
-          <img src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png" className="w-full h-full object-cover" alt="" />
+          <img
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779784645/blog_assets/kqlt5ehf1fhox5pqd5dp.jpg"
+            className="w-full h-full object-cover object-top"
+            alt=""
+          />
         </div>
         <div className="absolute inset-0 bg-black/40" />
         <h1 className="relative z-10 text-white font-sans text-5xl md:text-7xl font-bold tracking-tighter uppercase">

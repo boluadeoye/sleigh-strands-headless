@@ -1,12 +1,16 @@
 export async function getCategoryIdBySlug(slug: string) {
   const ck = process.env.WC_CONSUMER_KEY;
   const cs = process.env.WC_CONSUMER_SECRET;
-  const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+  const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
   const auth = `consumer_key=${ck}&consumer_secret=${cs}`;
 
   try {
     const res = await fetch(`${baseUrl}/wp-json/wc/v3/products/categories?slug=${slug}&${auth}`, {
-      next: { revalidate: 3600 } // Cache for 1 hour as IDs rarely change
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
     });
     const categories = await res.json();
     return categories.length > 0 ? categories[0].id : null;
@@ -19,7 +23,7 @@ export async function getCategoryIdBySlug(slug: string) {
 export async function getWooProducts(categorySlug?: string) {
   const ck = process.env.WC_CONSUMER_KEY;
   const cs = process.env.WC_CONSUMER_SECRET;
-  const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+  const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
 
   try {
     const url = new URL(`${baseUrl}/wp-json/wc/v3/products`);
@@ -30,14 +34,16 @@ export async function getWooProducts(categorySlug?: string) {
 
     if (categorySlug) {
       const categoryId = await getCategoryIdBySlug(categorySlug);
-      // If a category is requested but not found, return empty to prevent duplication
       if (!categoryId) return [];
       url.searchParams.append('category', categoryId.toString());
     }
 
     const res = await fetch(url.toString(), {
-      next: { revalidate: 60 },
-      headers: { 'Content-Type': 'application/json' }
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
     });
 
     if (!res.ok) return [];
@@ -51,25 +57,30 @@ export async function getWooProducts(categorySlug?: string) {
 export async function getSingleProduct(id: string) {
   const ck = process.env.WC_CONSUMER_KEY;
   const cs = process.env.WC_CONSUMER_SECRET;
-  const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+  const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
   const auth = `consumer_key=${ck}&consumer_secret=${cs}`;
 
   try {
     const res = await fetch(`${baseUrl}/wp-json/wc/v3/products/${id}?${auth}`, {
-      next: { revalidate: 60 }
+      cache: 'no-store',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
     });
     if (!res.ok) return null;
     const product = await res.json();
 
     if (product.type === 'variable' && product.variations?.length > 0) {
       const varRes = await fetch(`${baseUrl}/wp-json/wc/v3/products/${id}/variations?${auth}&per_page=100`, {
-        next: { revalidate: 60 }
+        cache: 'no-store',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
       });
       if (varRes.ok) {
         product.variations_data = await varRes.json();
       }
     }
-
     return product;
   } catch (e) {
     console.error("Single Product Fetch Error:", e);
@@ -80,11 +91,14 @@ export async function getSingleProduct(id: string) {
 export async function getProductReviews(productId: string) {
   const ck = process.env.WC_CONSUMER_KEY;
   const cs = process.env.WC_CONSUMER_SECRET;
-  const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+  const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
 
   try {
     const res = await fetch(`${baseUrl}/wp-json/wc/v3/products/reviews?product=${productId}&status=approved&consumer_key=${ck}&consumer_secret=${cs}`, {
-      next: { revalidate: 30 }
+      cache: 'no-store',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
     });
     if (!res.ok) return [];
     return res.json();

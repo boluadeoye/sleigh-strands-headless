@@ -1,47 +1,20 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Mail, Instagram } from 'lucide-react';
 
 /* ─── SHARED COMPONENTS ─────────────────────────────────────────────────── */
-function LuxuryListBlock({ 
-  items 
-}: { 
-  items: { 
-    label?: string; 
-    text: string; 
-    href?: string; 
-    icon?: React.ComponentType<{ size?: number; className?: string }> 
-  }[] 
-}) {
+function LuxuryListBlock({ items }: { items: { label?: string; text: string }[] }) {
   return (
     <div className="bg-[#F9F9F9] rounded-[24px] px-5 py-6 md:p-8 space-y-5 border border-black/[0.01] mt-4">
       {items.map((item, i) => (
         <div key={i} className="flex items-start gap-3 md:gap-4 min-w-0">
-          {/* Bullet: Strict Burgundy Dot or Lucide Icon */}
-          {item.icon ? (
-            <div className="mt-[2px] shrink-0 text-[#3D1218]">
-              <item.icon size={16} />
-            </div>
-          ) : (
-            <div className="w-2 h-2 rounded-full bg-[#3D1218] mt-2 shrink-0" />
-          )}
+          {/* Bullet: Strict Burgundy Dot */}
+          <div className="w-2 h-2 rounded-full bg-[#3D1218] mt-2 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="font-montserrat text-sm md:text-[15px] leading-relaxed text-[#0C0608]/80 break-words">
               {item.label && (
                 <span className="font-bold text-[#3D1218] mr-1">{item.label}:</span>
               )}
-              {item.href ? (
-                <a 
-                  href={item.href} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-[#FF6B35] hover:underline font-semibold"
-                >
-                  {item.text}
-                </a>
-              ) : (
-                item.text
-              )}
+              {item.text}
             </p>
           </div>
         </div>
@@ -160,8 +133,8 @@ export default function PrivacyPolicy() {
                 For questions regarding our privacy practices or to exercise your data rights, please reach out to our privacy team:
               </p>
               <LuxuryListBlock items={[
-                { label: "Email", text: "privacy@sleighstrands.com", href: "mailto:privacy@sleighstrands.com", icon: Mail },
-                { label: "Instagram", text: "@sleigh_strands", href: "https://www.instagram.com/sleigh_strands?igsh=a2FidnF6d2oxbGRt", icon: Instagram }
+                { label: "Email", text: "privacy@sleighstrands.com" },
+                { label: "Instagram", text: "@sleigh_strands" }
               ]} />
             </div>
 

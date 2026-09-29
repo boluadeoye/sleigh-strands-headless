@@ -1,10 +1,10 @@
 "use client";
 import { useState } from 'react';
 import Image from 'next/image';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoldStar, SBadge } from '@/components/about/AboutIcons';
+import { GoldStar, SBadge } from '../../components/about/AboutIcons';
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState<'brand' | 'ceo'>('brand');
@@ -20,7 +20,7 @@ export default function AboutPage() {
       <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg" 
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779803473/blog_assets/gucfexrkaol0ojc5jacm.jpg" 
             alt="Backdrop" fill className="object-cover blur-sm scale-105 opacity-40"
             priority
           />
@@ -158,7 +158,7 @@ export default function AboutPage() {
                   <SBadge text="OUR COLLECTIONS" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
                     {[
-                      { title: "Blend Wigs", sub: "stylish, affordable, and easy to wear.", img: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256287/blog_assets/dgpak6qfdiosyrq7ajlf.jpg" },
+                      { title: "Blend Wigs", sub: "stylish, affordable, and easy to wear.", img: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1779803473/blog_assets/gucfexrkaol0ojc5jacm.jpg" },
                       { title: "Futura Wigs", sub: "our highest quality synthetic option.", img: "https://res.cloudinary.com/dwbjb3svx/image/upload/v1777256282/blog_assets/nmgtkfnbogjddzwpdjza.jpg" }
                     ].map((col, i) => (
                       <div key={i} className="relative aspect-[4/5] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden group cursor-pointer shadow-xl">

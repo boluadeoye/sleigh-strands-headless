@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Plus, Minus, Mail, MessageCircle } from "lucide-react";
+import { Plus, Minus, Mail, Instagram } from "lucide-react";
 
 /* ─── DATA: 12 QUESTIONS WITH BULLET POINT LOGIC ────────────────────────── */
 
@@ -43,8 +43,8 @@ const FAQ_GROUPS = [
         bullets: [
           "Accurate representation",
           "Pre-styled delivery",
-          "Clear expectations",
-          "Quality control"
+          "Quality control",
+          "Clear expectations"
         ],
         outro: "So you can shop with confidence."
       },
@@ -120,9 +120,9 @@ export default function FAQPage() {
       {/* 1. EDITORIAL HERO */}
       <section className="relative h-[300px] md:h-[400px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/50 z-10" />
-        <img 
-          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776178787/blog_assets/pl11hvykxgybygohihqc.png" 
-          className="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
+        <img
+          src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779784645/blog_assets/kqlt5ehf1fhox5pqd5dp.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-top blur-sm scale-110"
           alt="FAQ Hero"
         />
         <div className="relative z-20 text-center px-6">
@@ -148,7 +148,7 @@ export default function FAQPage() {
               {/* Accordion Items */}
               <div className="space-y-4">
                 {group.items.map((item) => (
-                  <div 
+                  <div
                     key={item.id}
                     onClick={() => setOpenId(openId === item.id ? null : item.id)}
                     className="group bg-white border border-black/[0.02] rounded-[20px] p-6 md:p-8 cursor-pointer transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.05)]"
@@ -201,19 +201,19 @@ export default function FAQPage() {
               Our specialists are available to guide your selection and ensure you find your perfect strand.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-              <a 
+              <a
                 href="mailto:info@sleighstrands.com"
                 className="w-full md:w-auto flex items-center justify-center gap-3 bg-[#FDF8F0] text-[#3D1218] px-8 h-[48px] rounded-full font-outfit text-xs font-bold uppercase tracking-[0.2em] hover:bg-white transition-all"
               >
                 <Mail size={16} />
                 Email Us
               </a>
-              <a 
-                href="https://wa.me/09056113019"
+              <a
+                href="https://www.instagram.com/sleigh_strands?igsh=a2FidnF6d2oxbGRt"
                 className="w-full md:w-auto flex items-center justify-center gap-3 border border-white/20 text-white px-8 h-[48px] rounded-full font-outfit text-xs font-bold uppercase tracking-[0.2em] hover:bg-white/5 transition-all"
               >
-                <MessageCircle size={16} />
-                WhatsApp
+                <Instagram size={16} />
+                Instagram
               </a>
             </div>
           </div>

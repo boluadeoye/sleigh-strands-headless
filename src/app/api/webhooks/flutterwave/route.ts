@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const signature = req.headers.get('verif-hash');
@@ -11,8 +13,8 @@ export async function POST(req: Request) {
 
     if (payload.event === 'charge.completed' && payload.data.status === 'successful') {
       const transactionId = payload.data.id;
-      const txRef = payload.data.tx_ref; 
-      
+      const txRef = payload.data.tx_ref;
+
       const orderIdMatch = txRef.match(/SLEIGH_ORD_(\d+)_/);
       if (!orderIdMatch) return NextResponse.json({ error: 'Invalid tx_ref format' }, { status: 400 });
       const orderId = orderIdMatch[1];
@@ -21,17 +23,18 @@ export async function POST(req: Request) {
         headers: {
           Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
           'Content-Type': 'application/json'
-        }
+        },
+        cache: 'no-store'
       });
       const verifyData = await verifyRes.json();
 
       if (verifyData.status === 'success' && verifyData.data.status === 'successful') {
-        const baseUrl = process.env.WC_SITE_URL || 'https://sleigh.staymedia.ng';
+        const baseUrl = process.env.WC_SITE_URL || 'https://sleighstrands.com/admin';
         const ck = process.env.WC_CONSUMER_KEY;
         const cs = process.env.WC_CONSUMER_SECRET;
         const auth = `?consumer_key=${ck}&consumer_secret=${cs}`;
 
-        const orderRes = await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`);
+        const orderRes = await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`, { cache: 'no-store' });
         const order = await orderRes.json();
 
         if (order.status === 'processing' || order.status === 'completed') {
@@ -39,10 +42,10 @@ export async function POST(req: Request) {
         }
 
         if (Number(order.total) <= verifyData.data.amount) {
-          // Update WooCommerce order status. This PUT request natively triggers WordPress transactional emails
           await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
+            cache: 'no-store',
             body: JSON.stringify({
               status: 'processing',
               set_paid: true,
@@ -54,9 +57,10 @@ export async function POST(req: Request) {
           await fetch(`${baseUrl}/wp-json/wc/v3/orders/${orderId}${auth}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
+            cache: 'no-store',
             body: JSON.stringify({
               status: 'on-hold',
-              note: `Payment amount mismatch. Expected ${order.total}, received ${verifyData.data.amount}. Ref: ${txRef}`
+              note: `Payment amount mismatch. Ref: ${txRef}`
             })
           });
         }

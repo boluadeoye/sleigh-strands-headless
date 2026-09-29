@@ -21,13 +21,13 @@ export default function ReturnPolicyPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F0]">
       <Navbar variant="solid" />
-      
+
       {/* Header - High Blur Editorial */}
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden bg-[#4A1018]">
         <div className="absolute inset-0 opacity-70 blur-[2px] scale-110">
-          <img 
-            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776180088/blog_assets/xqie8to9cmdxjiaom0tm.png" 
-            className="w-full h-full object-cover"
+          <img
+            src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779784645/blog_assets/kqlt5ehf1fhox5pqd5dp.jpg"
+            className="w-full h-full object-cover object-top"
             alt=""
           />
         </div>
@@ -39,7 +39,7 @@ export default function ReturnPolicyPage() {
 
       <section className="max-w-5xl mx-auto px-6 py-16 md:py-24">
         <div className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-xl border border-black/5">
-          
+
           {/* Intro */}
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-sans text-[#8B2632] mb-6">Returns & Exchanges Policy</h2>
@@ -51,7 +51,7 @@ export default function ReturnPolicyPage() {
 
           {/* Policy Cards Grid */}
           <div className="grid grid-cols-1 gap-8 mb-16">
-            
+
             <PolicySection title="Eligibility for Returns">
               <p className="text-sm text-black/60 mb-4">For hygiene and quality reasons, we only accept returns under the following conditions:</p>
               <div className="space-y-3">

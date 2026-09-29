@@ -74,7 +74,7 @@ export default function FAQValueGrid() {
             </div>
             <div className="w-full md:w-[45%] relative min-h-[500px] md:min-h-0 rounded-[32px] overflow-hidden shadow-2xl">
               <Image
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1776178787/blog_assets/pl11hvykxgybygohihqc.png"
+                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1779786453/blog_assets/hlhyz2papllprmsxwrq3.jpg"
                 alt="Sleigh Strands FAQ" fill className="object-cover object-center hover:scale-105 transition-transform duration-1000" priority
               />
             </div>
@@ -89,10 +89,10 @@ export default function FAQValueGrid() {
             <div className="bg-[#3D1218] p-10 md:p-16 rounded-[32px] text-white flex flex-col justify-start shadow-xl relative overflow-hidden h-full">
               <div className="relative z-10">
                 <h3 className="text-3xl md:text-4xl lg:text-5xl font-sans font-medium leading-[1.1] tracking-tighter">
-                  Trusted by 500k+<br/>Women Worldwide
+                  Designed for the<br/>Everyday Sleigh Babe
                 </h3>
                 <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-sm mt-8 md:mt-12">
-                  <strong className="text-white font-semibold">Signature Luster.</strong> Experience the seamless movement and nourishing glow of hair that's designed to turn heads.
+                  <strong className="text-white font-semibold">Your New Favorite Wig Experience,</strong> From unboxing to styling, Sleigh Strands is designed to feel premium from start to finish.
                 </p>
               </div>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
