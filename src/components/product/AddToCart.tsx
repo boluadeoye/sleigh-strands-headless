@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useCart, GiftPackagingOption } from '@/context/CartContext';
-import { Minus, Plus, ShoppingBag, AlertCircle, Clock, Gift, Check } from 'lucide-react';
+import { Minus, Plus, ShoppingBag, AlertCircle, Clock, Gift, Check, Eye } from 'lucide-react';
 import Image from 'next/image';
 import * as gtag from '@/lib/gtag';
 
@@ -12,15 +12,24 @@ const PACKAGING_OPTIONS = [
     price: 0,
     priceLabel: 'Free',
     image: 'https://res.cloudinary.com/dwbjb3svx/image/upload/v1790689354/blog_assets/bya2pdw97udfokjqkdxl.jpg',
-    description: 'Complimentary signature silk pouch'
+    description: 'Complimentary signature mailer'
+  },
+  {
+    id: 'velvet' as const,
+    name: 'Signature Velvet Pouch',
+    price: 5500,
+    priceLabel: '₦5,500',
+    image: 'https://res.cloudinary.com/dwbjb3svx/image/upload/f_auto,q_auto/v1790933530/blog_assets/fdwdy9ejq41svqzxeooa.jpg',
+    description: 'Luxury maroon velvet pouch with satin ribbon'
   },
   {
     id: 'premium' as const,
-    name: 'Premium Gift Box',
-    price: 5000,
-    priceLabel: '₦5,000',
-    image: 'https://res.cloudinary.com/dwbjb3svx/image/upload/v1790689341/blog_assets/gr4ahkn26yuqsvyiwfio.jpg',
-    description: 'Rigid luxury maroon keepsake box with gold foil'
+    name: 'Premium Keepsake Box',
+    price: 9500,
+    priceLabel: '₦9,500',
+    image: 'https://res.cloudinary.com/dwbjb3svx/image/upload/f_auto,q_auto/v1790933503/blog_assets/rmpgftfnxgtruuhdjtqh.jpg',
+    insideImage: 'https://res.cloudinary.com/dwbjb3svx/image/upload/f_auto,q_auto/v1790933549/blog_assets/phojxi3ihawenwuvbh3f.jpg',
+    description: 'Rigid maroon box with gold foil & satin bed'
   }
 ];
 
@@ -28,7 +37,8 @@ export default function AddToCart({ product }: { product: any }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedAttributes, setSelectedAttributes] = useState<any>({});
   const [selectedVariation, setSelectedVariation] = useState<any>(null);
-  const [selectedPackaging, setSelectedPackaging] = useState<'standard' | 'premium'>('standard');
+  const [selectedPackaging, setSelectedPackaging] = useState<'standard' | 'velvet' | 'premium'>('standard');
+  const [showInsideBox, setShowInsideBox] = useState(false);
   const [giftMessage, setGiftMessage] = useState('');
   const { addToCart } = useCart();
 
@@ -63,7 +73,7 @@ export default function AddToCart({ product }: { product: any }) {
       id: chosenOption.id,
       name: chosenOption.name,
       price: chosenOption.price,
-      message: chosenOption.id === 'premium' ? giftMessage.trim() : undefined
+      message: chosenOption.price > 0 ? giftMessage.trim() : undefined
     };
 
     addToCart(product, quantity, selectedVariation, packagingData);
@@ -126,50 +136,68 @@ export default function AddToCart({ product }: { product: any }) {
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8B2632] flex items-center gap-1.5">
             <Gift size={14} /> Add Gift Packaging?
           </span>
-          <span className="text-[10px] text-black/40 font-medium">Selectable option</span>
+          <span className="text-[10px] text-black/40 font-medium">3 Options Available</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {PACKAGING_OPTIONS.map((pkg) => {
             const isSelected = selectedPackaging === pkg.id;
+            const isBox = pkg.id === 'premium';
+            const displayImg = isBox && showInsideBox ? pkg.insideImage! : pkg.image;
+
             return (
               <div
                 key={pkg.id}
                 onClick={() => setSelectedPackaging(pkg.id)}
-                className={`relative p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex gap-3 items-center ${
+                className={`relative p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
                   isSelected
-                    ? 'border-[#8B2632] bg-[#F5E6E8]/30 shadow-xs'
+                    ? 'border-[#8B2632] bg-[#F5E6E8]/35 shadow-xs'
                     : 'border-black/10 bg-white hover:border-black/20'
                 }`}
               >
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-black/5 bg-[#F9F9F9]">
-                  <Image src={pkg.image} alt={pkg.name} fill className="object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <h5 className="text-xs font-bold text-black/90 truncate uppercase tracking-tight">{pkg.name}</h5>
-                    {isSelected && (
-                      <div className="w-4 h-4 rounded-full bg-[#8B2632] text-white flex items-center justify-center shrink-0">
-                        <Check size={10} strokeWidth={3} />
-                      </div>
+                <div className="space-y-2">
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden border border-black/5 bg-[#F9F9F9]">
+                    <Image src={displayImg} alt={pkg.name} fill className="object-cover" />
+                    {isBox && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowInsideBox(!showInsideBox);
+                        }}
+                        className="absolute bottom-1.5 right-1.5 bg-black/60 hover:bg-black text-white text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full backdrop-blur-xs flex items-center gap-1 transition-all"
+                      >
+                        <Eye size={10} />
+                        <span>{showInsideBox ? "Outside" : "Inside"}</span>
+                      </button>
                     )}
                   </div>
-                  <span className={`text-xs font-bold block mt-0.5 ${pkg.price > 0 ? 'text-[#8B2632]' : 'text-green-700'}`}>
-                    {pkg.priceLabel}
-                  </span>
-                  <p className="text-[9px] text-black/50 truncate mt-0.5">{pkg.description}</p>
+                  <div>
+                    <div className="flex items-center justify-between gap-1">
+                      <h5 className="text-[11px] font-bold text-black/90 truncate uppercase tracking-tight">{pkg.name}</h5>
+                      {isSelected && (
+                        <div className="w-3.5 h-3.5 rounded-full bg-[#8B2632] text-white flex items-center justify-center shrink-0">
+                          <Check size={9} strokeWidth={3} />
+                        </div>
+                      )}
+                    </div>
+                    <span className={`text-xs font-bold block mt-0.5 ${pkg.price > 0 ? 'text-[#8B2632]' : 'text-green-700'}`}>
+                      {pkg.priceLabel}
+                    </span>
+                  </div>
                 </div>
+                <p className="text-[8.5px] text-black/50 leading-tight mt-1">{pkg.description}</p>
               </div>
             );
           })}
         </div>
 
-        {selectedPackaging === 'premium' && (
+        {selectedPackaging !== 'standard' && (
           <div className="space-y-2 bg-white p-4 rounded-2xl border border-[#8B2632]/20 animate-in fade-in duration-200">
             <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-black/60">
-              <span>Gift Message (Optional)</span>
-              <span className={giftMessage.length >= 240 ? 'text-red-500' : 'text-black/40'}>
-                {giftMessage.length}/250 characters
+              <span>Personalized Gift Message (Optional)</span>
+              <span className={giftMessage.length >= 240 ? 'text-red-500 font-bold' : 'text-black/40'}>
+                {giftMessage.length}/250
               </span>
             </div>
             <textarea
@@ -181,7 +209,7 @@ export default function AddToCart({ product }: { product: any }) {
               className="w-full p-3 bg-[#FAF8F3] border border-black/10 rounded-xl text-xs font-medium text-black outline-none focus:border-[#8B2632] placeholder:text-black/30 resize-none transition-colors"
             />
             <p className="text-[9px] text-black/40 italic">
-              * We will print this message on a luxury keepsake card placed inside the box.
+              * Your message will be printed on a luxury keepsake card and placed inside your packaging.
             </p>
           </div>
         )}

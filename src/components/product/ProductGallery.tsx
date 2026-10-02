@@ -8,7 +8,7 @@ import { useWishlist } from '@/context/WishlistContext';
 export default function ProductGallery({ images, name, productId }: { images: any[], name: string, productId: any }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { wishlistIds, toggleWishlist } = useWishlist();
-  
+
   const isWishlisted = wishlistIds.includes(productId);
 
   if (!images || images.length === 0) return (
@@ -16,9 +16,9 @@ export default function ProductGallery({ images, name, productId }: { images: an
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full min-w-0">
       {/* MAIN STAGE: Editorial Portrait Ratio */}
-      <div className="relative aspect-[4/5] max-h-[65vh] bg-white p-2 md:p-4 rounded-2xl shadow-sm border border-black/5 overflow-hidden">
+      <div className="relative w-full aspect-[4/5] max-h-[65vh] bg-white p-2 md:p-4 rounded-2xl shadow-sm border border-black/5 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -38,35 +38,36 @@ export default function ProductGallery({ images, name, productId }: { images: an
           </motion.div>
         </AnimatePresence>
 
-        {/* RESTORED: WISHLIST BUTTON */}
         <button
           onClick={(e) => { e.preventDefault(); toggleWishlist(productId); }}
-          className={`absolute top-6 right-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] hover:scale-110 transition-transform z-10 ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
+          className={`absolute top-6 right-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] hover:scale-110 transition-transform z-10 cursor-pointer ${isWishlisted ? 'text-[#8B2632]' : 'text-white'}`}
+          aria-label="Save to Wishlist"
         >
-          <Heart 
-            className="w-6 h-6 md:w-8 md:h-8" 
-            strokeWidth={2} 
-            fill={isWishlisted ? "currentColor" : "none"} 
+          <Heart
+            className="w-6 h-6 md:w-8 md:h-8"
+            strokeWidth={2}
+            fill={isWishlisted ? "currentColor" : "none"}
           />
         </button>
       </div>
 
-      {/* THUMBNAILS */}
+      {/* THUMBNAILS: Responsive Touch Reel (Never tears the page) */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+        <div className="w-full min-w-0 flex gap-2.5 sm:gap-3 overflow-x-auto touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-1 px-0.5">
           {images.map((img, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={() => setActiveIndex(idx)}
-              className={`relative w-20 h-24 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                activeIndex === idx ? 'border-[#8B2632]' : 'border-transparent opacity-60 hover:opacity-100'
+              className={`relative w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                activeIndex === idx ? 'border-[#8B2632] ring-1 ring-[#8B2632]/30 scale-[1.02]' : 'border-transparent opacity-55 hover:opacity-100'
               }`}
             >
-              <Image 
-                src={img.src} 
-                alt={`${name} ${idx}`} 
-                fill 
-                className="object-cover object-top" 
+              <Image
+                src={img.src}
+                alt={`${name} ${idx}`}
+                fill
+                className="object-cover object-top"
               />
             </button>
           ))}

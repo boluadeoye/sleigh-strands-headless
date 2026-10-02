@@ -23,10 +23,10 @@ export default async function ProductPage(props: { params: Promise<{ id: string 
           <span className="font-bold">Product Details</span>
         </div>
         <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start mb-32">
-          <div className="relative">
+          <div className="relative min-w-0 w-full">
             <ProductGallery images={product.images} name={product.name} productId={product.id} />
           </div>
-          <div className="pt-4">
+          <div className="pt-4 min-w-0 w-full">
             <h1 className="text-4xl md:text-5xl font-sans font-bold text-black mb-3 tracking-tight uppercase">{product.name}</h1>
             <div className="text-[11px] uppercase tracking-[0.3em] text-[#8B2632] mb-10 font-bold">
               Categories: <span className="text-black/40 font-medium">{product.categories?.[0]?.name || 'Luxury Hair'}</span>

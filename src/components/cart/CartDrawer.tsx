@@ -98,7 +98,7 @@ export default function CartDrawer() {
                 <div className="space-y-4">
                   <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-black/30 ml-1">{cart.length} ITEM{cart.length > 1 ? 'S' : ''} SELECTED</p>
                   {cart.map((item) => {
-                    const isGift = item.giftPackaging?.id === 'premium';
+                    const hasGiftFee = item.giftPackaging && item.giftPackaging.price > 0;
                     return (
                       <div key={`${item.id}-${item.variationId || 0}-${item.giftPackaging?.id || 'std'}-${item.giftPackaging?.message || ''}`} className="bg-white rounded-2xl p-3 md:p-4 flex gap-3 md:gap-4 border border-black/5 shadow-sm relative group">
                         <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden shrink-0 bg-[#F9F9F9]">
@@ -108,7 +108,7 @@ export default function CartDrawer() {
                           <div>
                             <h4 className="text-[11px] md:text-xs font-bold text-black/80 leading-tight line-clamp-2 uppercase tracking-tight">{item.name}</h4>
                             
-                            {isGift && (
+                            {hasGiftFee && (
                               <div className="mt-1.5 p-2 bg-[#F5E6E8]/40 border border-[#8B2632]/10 rounded-xl space-y-0.5">
                                 <div className="flex items-center gap-1 text-[9px] font-bold uppercase text-[#8B2632]">
                                   <Gift size={11} /> {item.giftPackaging?.name} (+₦{(item.giftPackaging?.price || 0).toLocaleString()})
@@ -128,7 +128,7 @@ export default function CartDrawer() {
                               <span className="text-[10px] font-bold">{item.quantity}</span>
                               <button onClick={() => updateQuantity(item.id, 1, item.variationId, item.giftPackaging?.id, item.giftPackaging?.message)} className="text-black/40 hover:text-[#8B2632] cursor-pointer"><Plus size={10} /></button>
                             </div>
-                            <span className="text-[11px] font-bold text-[#8B2632]">₦{((item.price + (isGift ? (item.giftPackaging?.price || 0) : 0)) * item.quantity).toLocaleString()}</span>
+                            <span className="text-[11px] font-bold text-[#8B2632]">₦{((item.price + (hasGiftFee ? (item.giftPackaging?.price || 0) : 0)) * item.quantity).toLocaleString()}</span>
                           </div>
                         </div>
                         <button onClick={() => removeFromCart(item.id, item.variationId, item.giftPackaging?.id, item.giftPackaging?.message)} className="flex items-center justify-center p-1 text-[#FF6B35] hover:text-red-600 transition-colors self-start cursor-pointer"><Trash2 size={16} /></button>

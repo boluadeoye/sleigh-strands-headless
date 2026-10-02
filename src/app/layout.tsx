@@ -19,13 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <head>
         <Script src="https://checkout.flutterwave.com/v3.js" strategy="beforeInteractive" />
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-F6J2MM8VK3" strategy="afterInteractive" />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-057GNKMWFL" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-F6J2MM8VK3', {
+            gtag('config', 'G-057GNKMWFL', {
               page_path: window.location.pathname,
             });
           `}

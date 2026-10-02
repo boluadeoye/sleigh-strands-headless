@@ -2,49 +2,45 @@
 
 import React from 'react';
 
-/* ─── MACHINED FIGMA ICONS ──────────────────────────────────────────────── */
-
-const IconEthical = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 21C12.5 21 13.5 20.5 14 20M10 20C10.5 20.5 11.5 21 12 21ZM21 12C21 12.5 20.5 13.5 20 14M20 10C20.5 10.5 21 11.5 21 12ZM12 3C11.5 3 10.5 3.5 10 4M14 4C13.5 3.5 12.5 3 12 3ZM3 12C3 11.5 3.5 10.5 4 10M4 14C3.5 13.5 3 12.5 3 12Z" stroke="currentColor" strokeWidth="0.5" opacity="0.5"/>
+const IconFlame = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D2A546" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
   </svg>
 );
 
-const IconShipping = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-    <path d="M20.5 15.5L18 13L13 18L15.5 20.5M3.5 3.5L11 6L13 11L18 13L21 21L13 18L11 13L6 11L3.5 3.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const IconGift = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D2A546" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+    <polyline points="20 12 20 22 4 22 4 12"/>
+    <rect x="2" y="7" width="20" height="5"/>
+    <line x1="12" y1="22" x2="12" y2="7"/>
+    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
   </svg>
 );
 
-const IconExcellence = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-    <path d="M12 3L4 9L12 21L20 9L12 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M4 9H20M8 6L12 9M16 6L12 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const IconFlash = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D2A546" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
   </svg>
 );
 
 const IconSecure = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-    <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <rect x="10" y="11" width="4" height="3" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M11 11V10C11 9.44772 11.4477 9 12 9C12.5523 9 13 9.44772 13 10V11" stroke="currentColor" strokeWidth="1.5"/>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D2A546" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
   </svg>
 );
 
-/* ─── DATA ──────────────────────────────────────────────────────────────── */
-
 const TRUST_POINTS = [
-  { label: "Refined Looks, Smarter Spending", icon: IconEthical },
-  { label: "Pre-Styled for Easy Wear", icon: IconShipping },
-  { label: "No Stress, Everything You Need Include", icon: IconExcellence },
-  { label: "Secure & Encrypted Checkout", icon: IconSecure },
+  { label: "EMBER SALES — HAIRS UNDER ₦60K (AS LOW AS ₦37,000)", icon: IconFlame },
+  { label: "FREE GIFT ON ALL ORDERS — FROM OCTOBER 5TH (10AM)", icon: IconGift },
+  { label: "LIMITED QUANTITY ON EACH UNIT — TILL STOCK LASTS", icon: IconFlash },
+  { label: "SECURE & ENCRYPTED CHECKOUT", icon: IconSecure },
 ];
 
 export default function TrustBar() {
   return (
-    <section className="bg-[#FDF8F0] border-y border-[#3D1218]/5 py-4 md:py-6 overflow-hidden relative group">
+    <section className="bg-[#3D1218] border-y border-[#D2A546]/20 py-3.5 md:py-4 overflow-hidden relative group">
       <style jsx global>{`
         @keyframes marquee {
           0% { transform: translate3d(0, 0, 0); }
@@ -53,20 +49,19 @@ export default function TrustBar() {
         .animate-marquee {
           display: flex;
           width: max-content;
-          animation: marquee 40s linear infinite;
+          animation: marquee 35s linear infinite;
           will-change: transform;
         }
       `}</style>
 
       <div className="flex overflow-hidden">
         <div className="animate-marquee flex items-center group-hover:[animation-play-state:paused]">
-          {/* Quadruple content for seamless loop on ultra-wide PC screens */}
           {[...TRUST_POINTS, ...TRUST_POINTS, ...TRUST_POINTS, ...TRUST_POINTS].map((point, i) => (
-            <div key={i} className="flex items-center gap-3 px-10 md:px-16 whitespace-nowrap subpixel-antialiased">
-              <div className="text-[#3D1218]/60">
+            <div key={i} className="flex items-center gap-3 px-8 md:px-14 whitespace-nowrap subpixel-antialiased">
+              <div className="text-[#D2A546]">
                 <point.icon />
               </div>
-              <span className="text-[#3D1218] font-sans font-medium text-[10px] md:text-[11px] tracking-[0.15em] uppercase">
+              <span className="text-[#F5E6E8] font-sans font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase">
                 {point.label}
               </span>
             </div>

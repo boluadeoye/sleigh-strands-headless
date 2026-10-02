@@ -11,6 +11,8 @@ export interface NavbarProps {
   variant?: 'transparent' | 'solid';
 }
 
+const USER_ICON_URL = "https://res.cloudinary.com/dwbjb3svx/image/upload/v1790828328/blog_assets/eovxoqjf3dkfak0mgajb.png";
+
 export default function Navbar({ variant = 'transparent' }: NavbarProps) {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,15 +45,17 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
     ? "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776291105/blog_assets/rbjwbpir9367gfypuf1i.png"
     : "https://res.cloudinary.com/dwbjb3svx/image/upload/v1776160062/blog_assets/vkp8knugjh0e4rmjl385.png";
 
-  const navBg = isSolid ? 'bg-[#F5E6E8] border-b border-[#8B2632]/5' : 'bg-transparent';
+  const navBg = isSolid
+    ? 'bg-[#F5E6E8] border-b border-[#8B2632]/5'
+    : 'bg-[#3D1218] border-b border-white/10 shadow-md';
+
   const textColor = isSolid ? 'text-[#8B2632]' : 'text-white';
-  const pillBg = isSolid ? 'bg-white/40 backdrop-blur-md border-[#8B2632]/10' : 'bg-black/20 border-white/10 backdrop-blur-md';
+  const pillBg = isSolid ? 'bg-white/40 backdrop-blur-md border-[#8B2632]/10' : 'bg-black/25 border-white/15 backdrop-blur-md';
   const iconBorder = isSolid ? 'border-[#8B2632]/20' : 'border-white/30';
-  const position = isSolid ? 'sticky top-0' : 'absolute top-0 pt-2';
-  
-  // RECALIBRATED FILTER: Precision match for #8B2632 (Deep Burgundy)
-  const iconFilter = isSolid 
-    ? 'invert(12%) sepia(68%) saturate(3800%) hue-rotate(340deg) brightness(85%) contrast(105%)' 
+  const position = 'sticky top-0';
+
+  const iconFilter = isSolid
+    ? 'invert(12%) sepia(68%) saturate(3800%) hue-rotate(340deg) brightness(85%) contrast(105%)'
     : 'brightness(0) invert(1)';
 
   const navLinks = [
@@ -70,21 +74,15 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
 
   return (
     <>
-      <nav className={`${position} w-full z-[100] px-6 md:px-12 transition-all duration-500 ${navBg} ${isSolid ? 'py-4' : 'pb-8'} subpixel-antialiased`}>
-        {!isSolid && (
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent -z-10 hidden md:block" />
-        )}
+      <nav className={`${position} w-full z-[100] px-4 min-[400px]:px-6 md:px-12 transition-all duration-300 ${navBg} py-2.5 md:py-3 subpixel-antialiased`}>
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-x-4 md:gap-x-0">
 
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-x-8 md:gap-x-0">
-          
-          {/* ZONE 1: LOGO (Nudged left, flex-1) */}
           <div className="flex-1 flex items-center justify-start">
-            <Link href="/" className="relative block w-full h-20 md:h-24 lg:h-28 max-w-[42vw] md:max-w-[280px] lg:max-w-[380px] transition-all duration-500">
+            <Link href="/" className="relative block w-full h-12 min-[400px]:h-14 md:h-16 lg:h-20 max-w-[130px] min-[400px]:max-w-[160px] md:max-w-[240px] lg:max-w-[300px] transition-all duration-300">
               <Image src={logoSrc} alt="Sleigh Strands" fill className="object-contain object-left" priority />
             </Link>
           </div>
 
-          {/* ZONE 2: NAVIGATION (Center Aligned, flex-none) */}
           <div className="hidden md:flex flex-none items-center justify-center px-4">
             <div className={`flex items-center gap-1 lg:gap-2 rounded-full p-1.5 border ${pillBg} transition-all duration-500 shadow-sm`}>
               {navLinks.map((link) => {
@@ -102,37 +100,56 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             </div>
           </div>
 
-          {/* ZONE 3: ACTIONS (Priority space, flex-none on mobile) */}
           <div className="flex-none md:flex-1 flex items-center justify-end gap-2 md:gap-4">
-            <button onClick={() => setIsSearchOpen(true)} className={`p-2.5 lg:p-3 rounded-full border ${iconBorder} ${textColor} hover:scale-110 transition-transform flex items-center justify-center`}>
-              <Search className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.2} />
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className={`w-9 h-9 min-[400px]:w-10 min-[400px]:h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} ${textColor} hover:scale-105 transition-transform flex items-center justify-center cursor-pointer`}
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4 lg:w-5 lg:h-5" strokeWidth={1.4} />
             </button>
 
-            <Link href="/account" className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} hover:scale-110 transition-transform flex items-center justify-center overflow-hidden`}>
+            <Link
+              href="/account"
+              className={`relative w-9 h-9 min-[400px]:w-10 min-[400px]:h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} hover:scale-105 transition-transform flex items-center justify-center overflow-hidden`}
+              aria-label="Account"
+            >
               <Image
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
+                src={USER_ICON_URL}
                 alt="Account"
-                width={32}
-                height={32}
-                style={{ filter: iconFilter }}
-                className="object-contain w-7 h-7 lg:w-9 lg:h-9 scale-[1.5] opacity-100"
-              />
-            </Link>
-
-            <button onClick={() => setIsDrawerOpen(true)} className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} transition-colors flex items-center justify-center`}>
-              <Image
-                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/ryvzrz6uupwqxgjycer2.png"
-                alt="Cart"
                 width={24}
                 height={24}
                 style={{ filter: iconFilter }}
-                className="object-contain w-5 h-5 lg:w-6 lg:h-6 opacity-100"
+                className="object-contain w-4 h-4 lg:w-5 lg:h-5 opacity-100"
               />
-              {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-[#8B2632] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">{cart.length}</span>}
+            </Link>
+
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className={`relative w-9 h-9 min-[400px]:w-10 min-[400px]:h-10 lg:w-12 lg:h-12 rounded-full border ${iconBorder} transition-colors flex items-center justify-center cursor-pointer`}
+              aria-label="Open Cart"
+            >
+              <Image
+                src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/ryvzrz6uupwqxgjycer2.png"
+                alt="Cart"
+                width={20}
+                height={20}
+                style={{ filter: iconFilter }}
+                className="object-contain w-4 h-4 lg:w-5 lg:h-5 opacity-100"
+              />
+              {cart.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#8B2632] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                  {cart.length}
+                </span>
+              )}
             </button>
 
-            <button className="md:hidden p-2" onClick={() => setIsMenuOpen(true)}>
-              <Menu size={32} strokeWidth={1.2} className={textColor} />
+            <button
+              className="md:hidden p-1.5 cursor-pointer text-white"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Open Menu"
+            >
+              <Menu size={26} strokeWidth={1.5} />
             </button>
           </div>
         </div>
@@ -142,23 +159,23 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
             <>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150]" />
               <motion.div variants={menuVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[400px] bg-[#F5E6E8] z-[200] shadow-2xl flex flex-col">
-                <div className="flex items-center justify-between p-8">
-                  <Link href="/account" onClick={() => setIsMenuOpen(false)} className="bg-[#8B2632] p-3 rounded-full text-white shadow-lg">
+                <div className="flex items-center justify-between p-6 sm:p-8 border-b border-[#8B2632]/10">
+                  <Link href="/account" onClick={() => setIsMenuOpen(false)} className="bg-[#8B2632] p-2.5 rounded-full text-white shadow-lg flex items-center justify-center">
                     <Image
-                      src="https://res.cloudinary.com/dwbjb3svx/image/upload/v1778244116/blog_assets/vybptgygwkhfos955aj3.png"
+                      src={USER_ICON_URL}
                       alt="Account"
-                      width={28}
-                      height={28}
+                      width={20}
+                      height={20}
                       style={{ filter: 'brightness(0) invert(1)' }}
-                      className="scale-125"
+                      className="object-contain"
                     />
                   </Link>
-                  <button onClick={() => setIsMenuOpen(false)} className="text-black/40 hover:text-black"><X size={32} strokeWidth={1} /></button>
+                  <button onClick={() => setIsMenuOpen(false)} className="text-black/50 hover:text-black cursor-pointer"><X size={28} strokeWidth={1.2} /></button>
                 </div>
-                <div className="flex flex-col px-10 pt-4">
+                <div className="flex flex-col px-8 pt-4">
                   {navLinks.map((link, i) => (
-                    <motion.div key={link.name} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 * i }}>
-                      <Link href={link.href} className="block py-6 text-[#8B2632] text-2xl font-sans border-b border-[#8B2632]/5 tracking-tight" onClick={() => setIsMenuOpen(false)}>{link.name}</Link>
+                    <motion.div key={link.name} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 * i }}>
+                      <Link href={link.href} className="block py-4 text-[#8B2632] text-xl font-sans border-b border-[#8B2632]/5 tracking-tight font-medium" onClick={() => setIsMenuOpen(false)}>{link.name}</Link>
                     </motion.div>
                   ))}
                 </div>
@@ -171,10 +188,10 @@ export default function Navbar({ variant = 'transparent' }: NavbarProps) {
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 bg-[#F5E6E8] z-[300] flex flex-col items-center justify-center p-6">
-            <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 md:top-12 md:right-12 text-[#8B2632]/40 hover:text-[#8B2632] transition-colors"><X size={40} strokeWidth={1} /></button>
+            <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 md:top-12 md:right-12 text-[#8B2632]/50 hover:text-[#8B2632] transition-colors cursor-pointer"><X size={36} strokeWidth={1.2} /></button>
             <form onSubmit={handleSearch} className="w-full max-w-3xl relative">
               <span className="text-[#8B2632] font-sans italic text-2xl md:text-4xl mb-4 block text-center">What are you looking for?</span>
-              <input autoFocus type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search collections..." className="w-full bg-transparent border-b-2 border-[#8B2632]/20 text-3xl md:text-6xl font-sans font-bold text-[#8B2632] py-4 outline-none focus:border-[#8B2632] transition-colors text-center placeholder:text-[#8B2632]/10" />
+              <input autoFocus type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search collections..." className="w-full bg-transparent border-b-2 border-[#8B2632]/30 text-2xl md:text-5xl font-sans font-bold text-[#8B2632] py-4 outline-none focus:border-[#8B2632] transition-colors text-center placeholder:text-[#8B2632]/20" />
             </form>
           </motion.div>
         )}

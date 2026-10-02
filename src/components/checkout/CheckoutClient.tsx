@@ -295,8 +295,8 @@ export default function CheckoutClient() {
           <div className="space-y-5 max-h-[260px] overflow-y-auto pr-2 custom-scrollbar">
             {cart.map((item: any) => {
               const isItemPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
-              const isGift = item.giftPackaging?.id === 'premium';
-              const itemTotal = (item.price + (isGift ? (item.giftPackaging?.price || 0) : 0)) * item.quantity;
+              const hasGift = item.giftPackaging && item.giftPackaging.price > 0;
+              const itemTotal = (item.price + (hasGift ? (item.giftPackaging?.price || 0) : 0)) * item.quantity;
               
               return (
                 <div key={`${item.id}-${item.variationId || 0}-${item.giftPackaging?.id || 'std'}`} className="flex items-start gap-3 group">
@@ -311,7 +311,7 @@ export default function CheckoutClient() {
                       )}
                     </div>
 
-                    {isGift && (
+                    {hasGift && (
                       <div className="mt-1 p-2 bg-[#F5E6E8]/40 border border-[#8B2632]/10 rounded-xl space-y-0.5">
                         <span className="text-[8px] font-bold uppercase text-[#8B2632] flex items-center gap-1">
                           <Gift size={10} /> {item.giftPackaging?.name} (+₦{(item.giftPackaging?.price || 0).toLocaleString()})

@@ -26,11 +26,11 @@ export async function POST(req: Request) {
       item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no')
     );
 
-    const hasGiftItems = items.some((item: any) => item.giftPackaging?.id === 'premium');
+    const hasGiftItems = items.some((item: any) => item.giftPackaging && item.giftPackaging.price > 0);
 
     const calculatedGiftFee = items.reduce((acc: number, item: any) => {
-      if (item.giftPackaging?.id === 'premium') {
-        return acc + ((item.giftPackaging.price || 5000) * item.quantity);
+      if (item.giftPackaging && item.giftPackaging.price > 0) {
+        return acc + (item.giftPackaging.price * item.quantity);
       }
       return acc;
     }, 0);
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     const giftFeeToApply = Number(giftPackagingTotal !== undefined ? giftPackagingTotal : calculatedGiftFee);
 
     const giftMessagesSummary = items
-      .filter((i: any) => i.giftPackaging?.id === 'premium' && i.giftPackaging?.message)
+      .filter((i: any) => i.giftPackaging && i.giftPackaging.price > 0 && i.giftPackaging.message)
       .map((i: any) => `[${i.name}]: "${i.giftPackaging.message}"`)
       .join(' | ');
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       shipping: addressData,
       line_items: items.map((item: any) => {
         const isPreOrder = item.stock_status === 'onbackorder' || (item.stock_status === 'outofstock' && item.backorders !== 'no');
-        const isGift = item.giftPackaging?.id === 'premium';
+        const hasGift = item.giftPackaging && item.giftPackaging.price > 0;
 
         return {
           product_id: Number(item.id),
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
           quantity: Number(item.quantity),
           meta_data: [
             ...(isPreOrder ? [{ key: 'Status', value: 'Pre-order' }] : []),
-            ...(isGift ? [
+            ...(hasGift ? [
               { key: 'Gift Packaging', value: item.giftPackaging.name },
               { key: 'Gift Packaging Fee', value: `₦${item.giftPackaging.price?.toLocaleString()}` },
               { key: 'Gift Message', value: item.giftPackaging.message || 'No custom note provided' }
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       fee_lines: [
         { name: 'VAT & Processing', total: String(transactionFee || 800), tax_class: '' },
         ...(giftFeeToApply > 0 ? [
-          { name: 'Premium Gift Packaging', total: String(giftFeeToApply), tax_class: '' }
+          { name: 'Gift Packaging', total: String(giftFeeToApply), tax_class: '' }
         ] : [])
       ],
       meta_data: [
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       ],
       customer_note: [
         hasPreOrder ? "⚠️ This order contains Pre-order items and will ship once styled." : "",
-        hasGiftItems ? `🎁 GIFT ORDER: Packaging requested. ${giftMessagesSummary ? `Card Message: ${giftMessagesSummary}` : ''}` : ""
+        hasGiftItems ? `🎁 GIFT PACKAGING REQUESTED. ${giftMessagesSummary ? `Card Message: ${giftMessagesSummary}` : ''}` : ""
       ].filter(Boolean).join('\n\n')
     };
 

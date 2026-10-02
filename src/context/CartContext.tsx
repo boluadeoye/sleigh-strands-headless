@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type GiftPackagingOption = {
-  id: 'standard' | 'premium';
+  id: 'standard' | 'velvet' | 'premium';
   name: string;
   price: number;
   message?: string;
@@ -150,7 +150,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const giftPackagingTotal = cart.reduce((acc, item) => {
-    const giftFee = (item.giftPackaging?.id === 'premium' ? item.giftPackaging.price : 0) || 0;
+    const giftFee = (item.giftPackaging && item.giftPackaging.price > 0 ? item.giftPackaging.price : 0) || 0;
     return acc + (giftFee * item.quantity);
   }, 0);
 
